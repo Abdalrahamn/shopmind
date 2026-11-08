@@ -40,6 +40,7 @@ python check_setup.py       # all four checks should print [OK]
 python scripts/seed_db.py   # builds data/shop.db
 python scripts/ingest.py    # chunks, embeds and stores the documents in Weaviate
 python scripts/check_index.py
+streamlit run app.py        # local explorer at http://localhost:8501
 ```
 
 ## Data
