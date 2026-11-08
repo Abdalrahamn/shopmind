@@ -53,3 +53,4 @@ rows = con.execute("""
     GROUP BY c.customer_id ORDER BY spent DESC LIMIT 3""").fetchall()
 for name, city, tier, spent in rows:
     print(f"  - {name:<22} {city:<11} {tier:<8} {spent:>9,} EGP")
+con.close()
