@@ -14,8 +14,8 @@ def gemini():
     if not os.getenv("GOOGLE_API_KEY"):
         raise RuntimeError("GOOGLE_API_KEY is empty in .env")
     from langchain.chat_models import init_chat_model
-    llm = init_chat_model("google_genai:gemini-2.5-flash")
-    return llm.invoke("Say hello in one word").content
+    llm = init_chat_model(f"google_genai:{os.getenv('GEMINI_MODEL', 'gemini-3.5-flash')}")
+    return llm.invoke("Say hello in one word").text.strip()
 
 def langsmith():
     if not os.getenv("LANGSMITH_API_KEY"):
