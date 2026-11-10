@@ -11,6 +11,10 @@ DOCS_DIR = ROOT / "data" / "docs"
 DB_PATH = ROOT / "data" / "shop.db"
 
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
+# Small helper tasks (query rewriting) use the lite model: higher free-tier daily quota.
+REWRITE_MODEL = os.getenv("REWRITE_MODEL", "gemini-3.5-flash-lite")
+REWRITE_FALLBACKS = ["gemini-3.8-flash", "gemini-3.7-flash"]  # used when the main one hits its limit
+CACHE_DIR = ROOT / "data" / "cache"
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
 
 WEAVIATE_COLLECTION = "StoreDocs"

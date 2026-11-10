@@ -22,7 +22,7 @@ This is a capstone project that applies *LangChain Essentials (v1)* and *Retriev
 
 - [x] **Phase 0: Setup** (environment, keys, Weaviate, tracing)
 - [x] **Phase 1: Data and indexing** (40 documents, SQLite store, chunking, embeddings in Weaviate)
-- [ ] **Phase 2: Retrieval** (BM25, semantic, hybrid + RRF, filtering, query rewriting, reranking)
+- [x] **Phase 2: Retrieval** (BM25, semantic, hybrid + RRF, filtering, query rewriting, reranking): see [findings](reports/retrieval_findings.md)
 - [ ] **Phase 3: Generation** (citations, "I don't know", model comparison)
 - [ ] **Phase 4: Agent** (tools, MCP, memory, streaming, structured output, human-in-the-loop)
 - [ ] **Phase 5: Evaluation and production** (golden set, Precision@K / Recall@K, LLM-as-judge, cost, latency, security)
@@ -40,6 +40,7 @@ python check_setup.py       # all four checks should print [OK]
 python scripts/seed_db.py   # builds data/shop.db
 python scripts/ingest.py    # chunks, embeds and stores the documents in Weaviate
 python scripts/check_index.py
+python scripts/eval_retrieval.py   # compares every retrieval setup on 28 labeled questions
 streamlit run app.py        # local explorer at http://localhost:8501
 ```
 
@@ -58,3 +59,19 @@ Each document has metadata used for filtering: `doc_type`, `category`, `status` 
 **SQL database** (`data/shop.db`, built by `scripts/seed_db.py`): 200 customers, 20 products with stock levels, 400 orders and their items. Products share SKUs and prices with the product documents, and shipping fees and loyalty tiers follow the written policies.
 
 **Indexing:** documents are split by Markdown section, then to at most 800 characters with 120 overlap (88 chunks). Chunks are embedded with `all-MiniLM-L6-v2` (384 dimensions) and stored in the Weaviate collection `StoreDocs`.
+
+## Retrieval (Phase 2)
+
+`shopmind/retrieval.py` holds every method behind one call, `Retriever.search(question, method, ...)`:
+TF-IDF and BM25 written from scratch (`shopmind/keyword_search.py`), Weaviate BM25, semantic search,
+hybrid search with our own Reciprocal Rank Fusion, Weaviate's built-in hybrid, metadata filters,
+cross-encoder reranking, and query rewriting with Gemini (`shopmind/query_rewriter.py`).
+
+| Setup | Recall@3 | MRR |
+|---|---|---|
+| BM25 (Weaviate) | 0.77 | 0.77 |
+| Semantic | 0.86 | 0.80 |
+| Hybrid RRF | 0.89 | 0.87 |
+| **Rewrite + Hybrid RRF (default)** | **1.00** | **0.98** |
+
+Full numbers: [reports/retrieval_eval.md](reports/retrieval_eval.md). What we learned and why: [reports/retrieval_findings.md](reports/retrieval_findings.md).

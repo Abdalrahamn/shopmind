@@ -17,6 +17,7 @@ from weaviate.classes.config import Configure, DataType, Property, Tokenization 
 
 from shopmind.config import DOCS_DIR, EMBEDDING_MODEL, WEAVIATE_COLLECTION  # noqa: E402
 from shopmind.documents import chunk_documents, load_documents  # noqa: E402
+from shopmind.keyword_search import STOPWORDS  # noqa: E402
 
 # Filterable labels use FIELD tokenization so "returns" matches exactly and is not split into words.
 KEYWORD = dict(data_type=DataType.TEXT, tokenization=Tokenization.FIELD, skip_vectorization=True)
@@ -78,6 +79,9 @@ def main() -> None:
         collection = client.collections.create(
             WEAVIATE_COLLECTION,
             vector_config=Configure.Vectors.self_provided(),  # we bring our own embeddings
+            # Weaviate's default English stopword list misses words like "how", "can", "i", "do".
+            # Without them, BM25 matched FAQ titles such as "How do I ..." instead of the key word.
+            inverted_index_config=Configure.inverted_index(stopwords_additions=sorted(STOPWORDS)),
             properties=PROPERTIES,
         )
         with collection.batch.fixed_size(batch_size=100) as batch:

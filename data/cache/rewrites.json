@@ -1,0 +1,254 @@
+{
+ "how many days do I have to return a product I already opened?": {
+  "query": "return window opened product return policy days",
+  "doc_type": "policy",
+  "category": "returns",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "Vodafone Cash": {
+  "query": "Vodafone Cash payment method",
+  "doc_type": "policy",
+  "category": "payment",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "can I buy with valU?": {
+  "query": "valU payment method instalment plans",
+  "doc_type": "policy",
+  "category": "payment",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "pay over 6 months with no interest": {
+  "query": "zero interest instalment plans 6 months payment",
+  "doc_type": "policy",
+  "category": "payment",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "how much is delivery to Alexandria?": {
+  "query": "delivery fee to Alexandria shipping cost",
+  "doc_type": "policy",
+  "category": "shipping",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "can I get my order today in Cairo?": {
+  "query": "same day delivery Cairo shipping time",
+  "doc_type": "policy",
+  "category": "shipping",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "how long until I get my money back for a cash on delivery order?": {
+  "query": "refund timeline cash on delivery order",
+  "doc_type": "policy",
+  "category": "returns",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "what does the warranty not cover?": {
+  "query": "warranty exclusions not covered damage policy",
+  "doc_type": "policy",
+  "category": "warranty",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "insurance if I drop my phone and crack the screen": {
+  "query": "phone accidental damage screen crack insurance warranty",
+  "doc_type": "policy",
+  "category": "warranty",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "can I cancel after the order was shipped?": {
+  "query": "cancel order after shipping policy",
+  "doc_type": "policy",
+  "category": "orders",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "another shop sells it cheaper": {
+  "query": "price match policy lower price competitor",
+  "doc_type": "policy",
+  "category": "pricing",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "do you sell my personal data?": {
+  "query": "data privacy policy sell personal information",
+  "doc_type": "policy",
+  "category": "privacy",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "how do I earn points and what are they worth?": {
+  "query": "loyalty points earn value rewards program",
+  "doc_type": "policy",
+  "category": "loyalty",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "where is my package?": {
+  "query": "where is my package tracking shipping status",
+  "doc_type": "policy",
+  "category": "shipping",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "I want to change the delivery address": {
+  "query": "change delivery address shipping order",
+  "doc_type": "policy",
+  "category": "shipping",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "are your branches open on Friday?": {
+  "query": "store branches opening hours Friday working days",
+  "doc_type": "faq",
+  "category": "store",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "can I swap my old iPhone for a discount?": {
+  "query": "trade in old iPhone for discount upgrade",
+  "doc_type": "policy",
+  "category": "phones",
+  "brand": "Apple",
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "noise cancelling headphones for flights": {
+  "query": "noise cancelling headphones for travel flights",
+  "doc_type": "product",
+  "category": "audio",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "SM-LT-003": {
+  "query": "SM-LT-003",
+  "doc_type": "product",
+  "category": "laptops",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "laptop with an RTX graphics card for games": {
+  "query": "gaming laptop RTX graphics card",
+  "doc_type": "product",
+  "category": "laptops",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "cheap laptop for online classes": {
+  "query": "affordable laptop for online classes student budget",
+  "doc_type": "product",
+  "category": "laptops",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "speaker I can take to the beach": {
+  "query": "waterproof outdoor portable bluetooth speaker beach",
+  "doc_type": "product",
+  "category": "audio",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "can I return AirPods after opening them?": {
+  "query": "return policy opened AirPods refund",
+  "doc_type": "policy",
+  "category": "returns",
+  "brand": "Apple",
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "can I return the Pixel 10a?": {
+  "query": "return window refund policy Pixel 10a",
+  "doc_type": "product",
+  "category": "returns",
+  "brand": "Google",
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "ازاي ارجع منتج فتحته؟": {
+  "query": "return opened product policy and refund window",
+  "doc_type": "policy",
+  "category": "returns",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "ينفع اقسط من غير فوايد؟": {
+  "query": "0 percent interest instalment plans payment methods",
+  "doc_type": "policy",
+  "category": "payment",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "مصاريف الشحن كام؟": {
+  "query": "shipping fee cost",
+  "doc_type": "policy",
+  "category": "shipping",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "فروعكم فين ومواعيدها ايه؟": {
+  "query": "store branches locations and working hours",
+  "doc_type": "faq",
+  "category": "store",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ }
+}

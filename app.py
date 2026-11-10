@@ -7,24 +7,16 @@ import sqlite3
 
 import pandas as pd
 import streamlit as st
-import weaviate
-from sentence_transformers import SentenceTransformer
-from weaviate.classes.query import Filter, MetadataQuery
-
-from shopmind.config import DB_PATH, DOCS_DIR, EMBEDDING_MODEL, GEMINI_MODEL, WEAVIATE_COLLECTION
+from shopmind.config import DB_PATH, DOCS_DIR, EMBEDDING_MODEL, GEMINI_MODEL, ROOT
 from shopmind.documents import chunk_documents, load_documents
+from shopmind.retrieval import Retriever, SearchFilters
 
 st.set_page_config(page_title="ShopMind Explorer", page_icon="🛒", layout="wide")
 
 
 @st.cache_resource
-def embedder():
-    return SentenceTransformer(EMBEDDING_MODEL)
-
-
-@st.cache_resource
-def weaviate_client():
-    return weaviate.connect_to_local()
+def retriever():
+    return Retriever()
 
 
 @st.cache_data
@@ -38,10 +30,10 @@ def sql(query: str, params=()) -> pd.DataFrame:
 
 
 st.title("🛒 ShopMind Explorer")
-st.caption("Everything built in Phase 0 (setup) and Phase 1 (data and indexing).")
+st.caption("Phase 0 (setup), Phase 1 (data and indexing) and Phase 2 (retrieval).")
 
-tab_setup, tab_docs, tab_chunks, tab_search, tab_sql = st.tabs(
-    ["⚙️ Setup", "📄 Documents", "✂️ Chunks", "🔎 Search", "🗄️ SQL database"]
+tab_setup, tab_docs, tab_chunks, tab_search, tab_eval, tab_sql = st.tabs(
+    ["⚙️ Setup", "📄 Documents", "✂️ Chunks", "🔎 Search", "📊 Retrieval eval", "🗄️ SQL database"]
 )
 
 # ---------------------------------------------------------------- Setup
@@ -60,8 +52,7 @@ with tab_setup:
         cols[1].error("**LangSmith**\n\nLANGSMITH_API_KEY missing")
 
     try:
-        client = weaviate_client()
-        total = client.collections.get(WEAVIATE_COLLECTION).aggregate.over_all(total_count=True).total_count
+        total = retriever().collection.aggregate.over_all(total_count=True).total_count
         cols[2].success(f"**Weaviate**\n\nready · {total} chunks stored")
     except Exception as e:
         cols[2].error(f"**Weaviate**\n\n{type(e).__name__}")
@@ -85,7 +76,7 @@ with tab_docs:
     kind = st.segmented_control("Type", ["all", "policy", "faq", "product"], default="all")
     if kind and kind != "all":
         table = table[table.doc_type == kind]
-    st.dataframe(table, hide_index=True, use_container_width=True)
+    st.dataframe(table, hide_index=True, width="stretch")
 
     choice = st.selectbox("Open a document", [d.metadata["doc_id"] for d in docs])
     doc = next(d for d in docs if d.metadata["doc_id"] == choice)
@@ -105,46 +96,87 @@ with tab_chunks:
             st.caption(f"chunk {c.metadata['chunk_index']} · {len(c.page_content)} characters")
             st.text(c.page_content)
 
-# ---------------------------------------------------------------- Search
+# ---------------------------------------------------------------- Search (Phase 2)
+METHOD_LABELS = {
+    "hybrid": "Hybrid RRF (BM25 + semantic)",
+    "semantic": "Semantic (meaning)",
+    "bm25": "BM25 (Weaviate)",
+    "bm25_scratch": "BM25 (from scratch)",
+    "tfidf": "TF-IDF (from scratch)",
+    "weaviate_hybrid": "Hybrid (Weaviate built-in)",
+}
+
+
+def show_hits(hits):
+    if not hits:
+        st.warning("No results.")
+    for i, h in enumerate(hits, 1):
+        p = h.properties
+        badge = " 🗄️ ARCHIVED" if p["status"] == "archived" else ""
+        ranks = ", ".join(f"{k.replace('_', ' ')} {v}" for k, v in h.extra.items() if k.endswith("rank") or k == "before_rerank")
+        with st.expander(f"{i}. {p['doc_id']} · {p['title']}{badge} · score {h.score:.3f}", expanded=i <= 2):
+            st.caption(f"{p['doc_type']} · {p['category']} · section: {p['section']}" + (f" · {ranks}" if ranks else ""))
+            st.text(p["text"])
+
+
 with tab_search:
-    st.subheader("Search the Weaviate index")
-    query = st.text_input("Question", "how many days do I have to send back headphones I already opened?")
-    c1, c2, c3, c4 = st.columns(4)
-    mode = c1.radio("Method", ["Semantic (meaning)", "Keyword (BM25)"])
-    doc_type = c2.selectbox("Filter: type", ["any", "policy", "faq", "product"])
-    active_only = c3.checkbox("Only active (hide archived)")
-    max_price = c4.number_input("Filter: max price (EGP, 0 = none)", min_value=0, step=1000)
+    st.subheader("Phase 2: retrieval")
+    query = st.text_input("Question (English or Arabic)", "can I return AirPods after opening them?")
+
+    c1, c2, c3 = st.columns([2, 1, 1])
+    method = c1.selectbox("Method", list(METHOD_LABELS), format_func=METHOD_LABELS.get)
+    use_rerank = c2.toggle("Rerank (cross-encoder)")
+    use_rewrite = c3.toggle("Rewrite with Gemini")
+
+    with st.expander("Metadata filters"):
+        f1, f2, f3, f4 = st.columns(4)
+        doc_type = f1.selectbox("Type", ["any", "policy", "faq", "product"])
+        category = f2.text_input("Category", placeholder="e.g. returns, phones")
+        max_price = f3.number_input("Max price (EGP, 0 = none)", min_value=0, step=1000)
+        include_archived = f4.checkbox("Include archived")
     k = st.slider("Results", 1, 10, 5)
+    unique = st.checkbox("One chunk per document", value=True)
 
-    filters = []
-    if doc_type != "any":
-        filters.append(Filter.by_property("doc_type").equal(doc_type))
-    if active_only:
-        filters.append(Filter.by_property("status").equal("active"))
-    if max_price:
-        filters.append(Filter.by_property("price_egp").less_than(max_price))
-    combined = Filter.all_of(filters) if filters else None
+    filters = SearchFilters(doc_type=None if doc_type == "any" else doc_type, category=category or None,
+                            max_price=max_price or None, include_archived=include_archived)
 
+    view_single, view_compare = st.tabs(["Results", "Compare all methods"])
     if query:
-        collection = weaviate_client().collections.get(WEAVIATE_COLLECTION)
-        if mode.startswith("Semantic"):
-            vector = embedder().encode(query, normalize_embeddings=True).tolist()
-            res = collection.query.near_vector(vector, limit=k, filters=combined,
-                                               return_metadata=MetadataQuery(distance=True))
-            score = lambda o: f"similarity {1 - o.metadata.distance:.2f}"  # noqa: E731
-        else:
-            res = collection.query.bm25(query, limit=k, filters=combined,
-                                        return_metadata=MetadataQuery(score=True))
-            score = lambda o: f"BM25 score {o.metadata.score:.2f}"  # noqa: E731
+        r = retriever()
+        with view_single:
+            if use_rewrite:
+                with st.spinner("Gemini is rewriting the question..."):
+                    plan = r.rewrite(query)
+                st.info(f"**Rewritten query:** {plan.query}")
+                applied = plan.model_dump(exclude_defaults=True, include={"min_price", "max_price", "include_archived"})
+                hints = plan.model_dump(exclude_defaults=True, include={"doc_type", "category", "brand"})
+                st.caption(f"Filters applied from the question: {applied or 'none'} · "
+                           f"Hints only, not applied: {hints or 'none'}")
+            hits = r.search(query, method, k=k, filters=filters, rerank=use_rerank,
+                            rewrite=use_rewrite, unique_docs=unique)
+            show_hits(hits)
+        with view_compare:
+            st.caption("Same question and filters, every method side by side (top documents).")
+            q = r.rewrite(query).query if use_rewrite else query
+            cols = st.columns(3)
+            for i, m in enumerate(METHOD_LABELS):
+                with cols[i % 3].container(border=True):
+                    st.markdown(f"**{METHOD_LABELS[m]}**")
+                    for j, h in enumerate(r.search(q, m, k=k, filters=filters, rerank=use_rerank, unique_docs=True), 1):
+                        st.write(f"{j}. `{h.doc_id}` {h.properties['title'][:38]}")
 
-        if not res.objects:
-            st.warning("No results.")
-        for i, o in enumerate(res.objects, 1):
-            p = o.properties
-            badge = " 🗄️ ARCHIVED" if p["status"] == "archived" else ""
-            with st.expander(f"{i}. {p['doc_id']} · {p['title']}{badge} · {score(o)}", expanded=i <= 2):
-                st.caption(f"{p['doc_type']} · {p['category']} · section: {p['section']}")
-                st.text(p["text"])
+# ---------------------------------------------------------------- Evaluation (Phase 2)
+with tab_eval:
+    findings, report = ROOT / "reports" / "retrieval_findings.md", ROOT / "reports" / "retrieval_eval.md"
+    view_findings, view_numbers = st.tabs(["Findings and decisions", "Full numbers"])
+    with view_findings:
+        if findings.exists():
+            st.markdown(findings.read_text(encoding="utf-8"))
+    with view_numbers:
+        if report.exists():
+            st.markdown(report.read_text(encoding="utf-8"))
+        else:
+            st.info("Run `python scripts/eval_retrieval.py` to create the evaluation report.")
 
 # ---------------------------------------------------------------- SQL
 with tab_sql:
@@ -170,6 +202,6 @@ GROUP BY p.sku ORDER BY units_sold DESC LIMIT 10""",
     pick = st.selectbox("Example query", list(examples))
     query = st.text_area("SQL (read-only)", examples[pick], height=140)
     try:
-        st.dataframe(sql(query), hide_index=True, use_container_width=True)
+        st.dataframe(sql(query), hide_index=True, width="stretch")
     except Exception as e:
         st.error(f"{type(e).__name__}: {e}")
