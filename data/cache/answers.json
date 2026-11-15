@@ -1,0 +1,459 @@
+{
+ "gemini-3.5-flash|0.0|0|can I return the Pixel 10a?": {
+  "question": "can I return the Pixel 10a?",
+  "answer": "The Google Pixel 10a is a clearance item (final sale) [SM-PH-005], so it cannot be returned unless it is defective [POL-001]. If it is defective within the first 30 days, it can be replaced or fully refunded [POL-001].",
+  "answerable": true,
+  "citations": [
+   "SM-PH-005",
+   "POL-001"
+  ],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-001",
+   "SM-PH-005"
+  ],
+  "model": "gemini-3.5-flash",
+  "temperature": 0.0,
+  "latency_s": 5.6,
+  "input_tokens": 717,
+  "output_tokens": 888
+ },
+ "gemini-3.5-flash|0.0|0|how many days do I have to return a product I already opened?": {
+  "question": "how many days do I have to return a product I already opened?",
+  "answer": "If you opened the product and it is in perfect condition (with all original accessories, manuals, and packaging), you have 14 days from delivery to return it [POL-001] [FAQ-005]. However, if the opened product is defective, you can return it within 30 days of delivery for a full refund or replacement [POL-001] [FAQ-005].",
+  "answerable": true,
+  "citations": [
+   "POL-001",
+   "FAQ-005"
+  ],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-001",
+   "FAQ-005"
+  ],
+  "model": "gemini-3.5-flash",
+  "temperature": 0.0,
+  "latency_s": 4.32,
+  "input_tokens": 775,
+  "output_tokens": 690
+ },
+ "gemini-3.5-flash|0.0|0|how much is delivery to Alexandria?": {
+  "question": "how much is delivery to Alexandria?",
+  "answer": "Standard shipping to Alexandria is 75 EGP, and it is free for orders of 5,000 EGP or more [POL-002]. Express delivery costs 120 EGP [POL-002]. For large items (such as TVs over 55 inches or gaming chairs), there is a fixed fee of 150 EGP outside Cairo and Giza [POL-002].",
+  "answerable": true,
+  "citations": [
+   "POL-002"
+  ],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-002",
+   "FAQ-003",
+   "POL-006"
+  ],
+  "model": "gemini-3.5-flash",
+  "temperature": 0.0,
+  "latency_s": 4.47,
+  "input_tokens": 695,
+  "output_tokens": 870
+ },
+ "gemini-3.5-flash|0.0|0|pay over 6 months with no interest": {
+  "question": "pay over 6 months with no interest",
+  "answer": "You can get 0% interest for 6 months using cards from partner banks, which include CIB, Banque Misr, National Bank of Egypt, and QNB [POL-005]. Instalment plans are available for orders of 3,000 EGP or more [POL-005]. You can select the instalment plan on the payment page, and your bank will convert the purchase within one billing cycle [POL-005].",
+  "answerable": true,
+  "citations": [
+   "POL-005"
+  ],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-005",
+   "POL-004"
+  ],
+  "model": "gemini-3.5-flash",
+  "temperature": 0.0,
+  "latency_s": 3.29,
+  "input_tokens": 665,
+  "output_tokens": 609
+ },
+ "gemini-3.5-flash|0.0|0|ازاي ارجع منتج فتحته؟": {
+  "question": "ازاي ارجع منتج فتحته؟",
+  "answer": "تقدر ترجع المنتج المفتوح خلال 14 يوم من التوصيل بشرط يكون بحالة ممتازة ومعاه كل الملحقات والكتالوجات والتغليف الأصلي [POL-001]. أما لو المنتج فيه عيب، تقدر ترجعه خلال 30 يوم سواء مفتوح أو لا [POL-001]. (تنبيه: البرامج المفتوحة، وسماعات الأذن إذا تم كسر ختم Hygiene Seal، ومنتجات التصفية Clearance لا يمكن إرجاعها إلا إذا كانت معيبة [POL-001]). لطلب الإرجاع: 1. افتح طلباتي (My Orders) من حسابك واختار الطلب [POL-001]. 2. اختار طلب إرجاع (Request Return) وحدد المنتجات والسبب [POL-001]. 3. بيتم مراجعة الطلب خلال يومين عمل [POL-001]. 4. بعد الموافقة، مندوب بيستلم المنتج مجانًا (في القاهرة والجيزة) أو تقدر تسلمه في أي فرع من فروع ShopMind [POL-001].",
+  "answerable": true,
+  "citations": [
+   "POL-001"
+  ],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-001",
+   "FAQ-005"
+  ],
+  "model": "gemini-3.5-flash",
+  "temperature": 0.0,
+  "latency_s": 7.88,
+  "input_tokens": 756,
+  "output_tokens": 1615
+ },
+ "gemini-3.5-flash|0.0|0|مصاريف الشحن كام؟": {
+  "question": "مصاريف الشحن كام؟",
+  "answer": "مصاريف الشحن بتختلف حسب المكان وحجم الطلب:\n- الشحن القياسي للقاهرة والجيزة: 50 جنيه، ومجاناً للطلبات بقيمة 2,000 جنيه أو أكثر [POL-002].\n- الشحن القياسي لباقي المحافظات: 75 جنيه، ومجاناً للطلبات بقيمة 5,000 جنيه أو أكثر [POL-002].\n- التوصيل السريع (Express): 120 جنيه وغير مجاني تماماً [POL-002].\n- المنتجات الكبيرة (تلفزيونات أكبر من 55 بوصة أو كراسي الألعاب): رسوم ثابتة 150 جنيه خارج القاهرة والجيزة [POL-002].",
+  "answerable": true,
+  "citations": [
+   "POL-002"
+  ],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-002",
+   "POL-006"
+  ],
+  "model": "gemini-3.5-flash",
+  "temperature": 0.0,
+  "latency_s": 4.36,
+  "input_tokens": 656,
+  "output_tokens": 835
+ },
+ "gemini-3.5-flash|0.0|0|how long do card refunds take?": {
+  "question": "how long do card refunds take?",
+  "answer": "Card refunds take 5 to 10 business days after we receive and inspect the returned item [POL-001] [FAQ-006].",
+  "answerable": true,
+  "citations": [
+   "POL-001",
+   "FAQ-006"
+  ],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-001",
+   "FAQ-006"
+  ],
+  "model": "gemini-3.5-flash",
+  "temperature": 0.0,
+  "latency_s": 2.45,
+  "input_tokens": 730,
+  "output_tokens": 369
+ },
+ "gemini-3.5-flash|0.0|0|what is the price of the iPhone 17 Pro Max?": {
+  "question": "what is the price of the iPhone 17 Pro Max?",
+  "answer": "I do not have information about the price of the iPhone 17 Pro Max. Please contact our support team on 19555 for assistance.",
+  "answerable": false,
+  "citations": [],
+  "dropped_citations": [],
+  "source_ids": [
+   "SM-PH-003",
+   "SM-PH-004",
+   "SM-AU-002",
+   "SM-AU-001"
+  ],
+  "model": "gemini-3.5-flash",
+  "temperature": 0.0,
+  "latency_s": 2.68,
+  "input_tokens": 699,
+  "output_tokens": 416
+ },
+ "gemini-3.5-flash|0.0|0|how much does a screen repair cost outside the warranty?": {
+  "question": "how much does a screen repair cost outside the warranty?",
+  "answer": "I am sorry, but I don't have information about the cost of screen repairs outside the warranty. Please contact customer support on 19555 for assistance.",
+  "answerable": false,
+  "citations": [],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-003",
+   "SM-LT-002"
+  ],
+  "model": "gemini-3.5-flash",
+  "temperature": 0.0,
+  "latency_s": 4.34,
+  "input_tokens": 732,
+  "output_tokens": 809
+ },
+ "gemini-3.5-flash|0.0|0|who is the CEO of ShopMind?": {
+  "question": "who is the CEO of ShopMind?",
+  "answer": "I'm sorry, but I do not have information regarding who the CEO of ShopMind is. Please contact support on 19555 for assistance.",
+  "answerable": false,
+  "citations": [],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-005",
+   "POL-009",
+   "POL-003",
+   "FAQ-008"
+  ],
+  "model": "gemini-3.5-flash",
+  "temperature": 0.0,
+  "latency_s": 2.43,
+  "input_tokens": 655,
+  "output_tokens": 293
+ },
+ "gemini-3.5-flash-lite|0.0|0|how many days do I have to return a product I already opened?": {
+  "question": "how many days do I have to return a product I already opened?",
+  "answer": "You have 14 days from delivery to return an opened product in perfect condition with all original accessories, manuals, and packaging [POL-001].",
+  "answerable": true,
+  "citations": [
+   "POL-001"
+  ],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-001",
+   "FAQ-005"
+  ],
+  "model": "gemini-3.5-flash-lite",
+  "temperature": 0.0,
+  "latency_s": 0.97,
+  "input_tokens": 775,
+  "output_tokens": 68
+ },
+ "gemini-3.5-flash-lite|0.0|0|how much is delivery to Alexandria?": {
+  "question": "how much is delivery to Alexandria?",
+  "answer": "Standard shipping to Alexandria (and Delta and Canal cities) is 75 EGP, and it is free on orders of 5,000 EGP or more [POL-002]. Express delivery is next business day and costs 120 EGP (never free) [POL-002].",
+  "answerable": true,
+  "citations": [
+   "POL-002"
+  ],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-002",
+   "FAQ-003",
+   "POL-006"
+  ],
+  "model": "gemini-3.5-flash-lite",
+  "temperature": 0.0,
+  "latency_s": 1.1,
+  "input_tokens": 695,
+  "output_tokens": 103
+ },
+ "gemini-3.5-flash-lite|0.0|0|pay over 6 months with no interest": {
+  "question": "pay over 6 months with no interest",
+  "answer": "أهلاً بك! يمكنك التقسيط بدون فوائد لمدة 6 أشهر باستخدام بطاقات من البنوك الشريكة (البنك التجاري الدولي CIB، بنك مصر، البنك الأهلي المصري، وقناة السويس QNB)، وذلك للطلبات بقيمة 3000 جنيه مصري أو أكثر [POL-005].",
+  "answerable": true,
+  "citations": [
+   "POL-005"
+  ],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-005",
+   "POL-004"
+  ],
+  "model": "gemini-3.5-flash-lite",
+  "temperature": 0.0,
+  "latency_s": 1.23,
+  "input_tokens": 665,
+  "output_tokens": 110
+ },
+ "gemini-3.5-flash-lite|0.0|0|can I return the Pixel 10a?": {
+  "question": "can I return the Pixel 10a?",
+  "answer": "أهلاً بك! بالنسبة لجوجل Pixel 10a، فهو منتج تصفية (Clearance) وبالتالي يعتبر بيعاً نهائياً ولا يمكن إرجاعه إلا إذا كان عائباً [SM-PH-005, POL-001].",
+  "answerable": true,
+  "citations": [
+   "SM-PH-005",
+   "POL-001"
+  ],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-001",
+   "SM-PH-005"
+  ],
+  "model": "gemini-3.5-flash-lite",
+  "temperature": 0.0,
+  "latency_s": 1.05,
+  "input_tokens": 717,
+  "output_tokens": 106
+ },
+ "gemini-3.5-flash-lite|0.0|0|ازاي ارجع منتج فتحته؟": {
+  "question": "ازاي ارجع منتج فتحته؟",
+  "answer": "عشان ترجع منتج فتحته، لازم يكون في حالة ممتازة ومعاه كل الإكسسوارات الأصلية والكتيبات والعبوة خلال 14 يوم من تاريخ الاستلام [POL-001]. تقدر تبدأ المرتجع من قسم \"طلباتي\" في حسابك، تختار الطلب وتدوس \"طلب إرجاع\" وتحدد المنتجات والسبب [POL-001].",
+  "answerable": true,
+  "citations": [
+   "POL-001"
+  ],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-001",
+   "FAQ-005"
+  ],
+  "model": "gemini-3.5-flash-lite",
+  "temperature": 0.0,
+  "latency_s": 1.14,
+  "input_tokens": 756,
+  "output_tokens": 127
+ },
+ "gemini-3.5-flash-lite|0.0|0|مصاريف الشحن كام؟": {
+  "question": "مصاريف الشحن كام؟",
+  "answer": "مصاريف الشحن كالتالي:\n- الشحنات القياسية للقاهرة والجيزة مجانية للطلبات من 2000 جنيه أو أكثر، وتكون 50 جنيه للطلبات الأصغر [POL-002].\n- الشحن القياسي لباقي المحافظات هو 75 جنيه، ومجاني للطلبات من 5000 جنيه أو أكثر [POL-002].\n- التوصيل السريع هو 120 جنيه ومش بيبقى مجاني أبداً [POL-002].\n- الأجهزة الكبيرة (زي التليفزيونات الأكبر من 55 بوصة وكراسي الألعاب) ليها رسوم ثابتة 150 جنيه بره القاهرة والجيزة [POL-002].",
+  "answerable": true,
+  "citations": [
+   "POL-002"
+  ],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-002",
+   "POL-006"
+  ],
+  "model": "gemini-3.5-flash-lite",
+  "temperature": 0.0,
+  "latency_s": 1.31,
+  "input_tokens": 656,
+  "output_tokens": 207
+ },
+ "gemini-3.5-flash-lite|0.0|0|how long do card refunds take?": {
+  "question": "how long do card refunds take?",
+  "answer": "Card refunds take 5 to 10 business days after we receive and inspect the item [POL-001].",
+  "answerable": true,
+  "citations": [
+   "POL-001"
+  ],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-001",
+   "FAQ-006"
+  ],
+  "model": "gemini-3.5-flash-lite",
+  "temperature": 0.0,
+  "latency_s": 0.81,
+  "input_tokens": 730,
+  "output_tokens": 61
+ },
+ "gemini-3.5-flash-lite|0.0|0|what is the price of the iPhone 17 Pro Max?": {
+  "question": "what is the price of the iPhone 17 Pro Max?",
+  "answer": "عذراً، لا أملك معلومات عن سعر iPhone 17 Pro Max. يمكنك التواصل معنا على رقم الدعم 19555 لمعرفة المزيد.",
+  "answerable": false,
+  "citations": [],
+  "dropped_citations": [],
+  "source_ids": [
+   "SM-PH-003",
+   "SM-PH-004",
+   "SM-AU-002",
+   "SM-AU-001"
+  ],
+  "model": "gemini-3.5-flash-lite",
+  "temperature": 0.0,
+  "latency_s": 0.96,
+  "input_tokens": 699,
+  "output_tokens": 57
+ },
+ "gemini-3.5-flash-lite|0.0|0|how much does a screen repair cost outside the warranty?": {
+  "question": "how much does a screen repair cost outside the warranty?",
+  "answer": "عذراً، لا أملك معلومات حول تكلفة إصلاح الشاشة خارج الضمان. يرجى التواصل مع الدعم على 19555 للمساعدة.",
+  "answerable": false,
+  "citations": [],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-003",
+   "SM-LT-002"
+  ],
+  "model": "gemini-3.5-flash-lite",
+  "temperature": 0.0,
+  "latency_s": 0.83,
+  "input_tokens": 732,
+  "output_tokens": 59
+ },
+ "gemini-3.5-flash-lite|0.0|0|who is the CEO of ShopMind?": {
+  "question": "who is the CEO of ShopMind?",
+  "answer": "عذراً، لا أملك هذه المعلومات. يمكنك التواصل مع خدمة العملاء على 19555.",
+  "answerable": false,
+  "citations": [],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-005",
+   "POL-009",
+   "POL-003",
+   "FAQ-008"
+  ],
+  "model": "gemini-3.5-flash-lite",
+  "temperature": 0.0,
+  "latency_s": 0.83,
+  "input_tokens": 655,
+  "output_tokens": 48
+ },
+ "gemini-3.5-flash|0.0|1|can I return the Pixel 10a?": {
+  "question": "can I return the Pixel 10a?",
+  "answer": "The Google Pixel 10a is a clearance item (final sale) [SM-PH-005], so it cannot be returned unless it is defective [POL-001].",
+  "answerable": true,
+  "citations": [
+   "SM-PH-005",
+   "POL-001"
+  ],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-001",
+   "SM-PH-005"
+  ],
+  "model": "gemini-3.5-flash",
+  "temperature": 0.0,
+  "latency_s": 4.54,
+  "input_tokens": 717,
+  "output_tokens": 729
+ },
+ "gemini-3.5-flash|0.0|2|can I return the Pixel 10a?": {
+  "question": "can I return the Pixel 10a?",
+  "answer": "The Google Pixel 10a is a clearance item and marked as final sale [SM-PH-005]. Items sold in the Clearance section cannot be returned unless they are defective [POL-001]. If the product is defective within the first 30 days of delivery, it can be replaced or refunded in full [POL-001].",
+  "answerable": true,
+  "citations": [
+   "SM-PH-005",
+   "POL-001"
+  ],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-001",
+   "SM-PH-005"
+  ],
+  "model": "gemini-3.5-flash",
+  "temperature": 0.0,
+  "latency_s": 6.15,
+  "input_tokens": 717,
+  "output_tokens": 879
+ },
+ "gemini-3.5-flash|1.5|0|can I return the Pixel 10a?": {
+  "question": "can I return the Pixel 10a?",
+  "answer": "The Google Pixel 10a is a clearance item and marked as final sale [SM-PH-005]. Items sold in the clearance section cannot be returned unless they are defective [POL-001].",
+  "answerable": true,
+  "citations": [
+   "SM-PH-005",
+   "POL-001"
+  ],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-001",
+   "SM-PH-005"
+  ],
+  "model": "gemini-3.5-flash",
+  "temperature": 1.5,
+  "latency_s": 12.59,
+  "input_tokens": 717,
+  "output_tokens": 580
+ },
+ "gemini-3.5-flash|1.5|1|can I return the Pixel 10a?": {
+  "question": "can I return the Pixel 10a?",
+  "answer": "The Google Pixel 10a is a clearance item (final sale) [SM-PH-005], which means it cannot be returned unless it is defective [POL-001]. If it stops working within the first 30 days of delivery, it can be replaced or refunded in full [POL-001].",
+  "answerable": true,
+  "citations": [
+   "SM-PH-005",
+   "POL-001"
+  ],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-001",
+   "SM-PH-005"
+  ],
+  "model": "gemini-3.5-flash",
+  "temperature": 1.5,
+  "latency_s": 14.06,
+  "input_tokens": 717,
+  "output_tokens": 891
+ },
+ "gemini-3.5-flash|1.5|2|can I return the Pixel 10a?": {
+  "question": "can I return the Pixel 10a?",
+  "answer": "The Google Pixel 10a is a clearance item and marked as final sale [SM-PH-005]. Therefore, it cannot be returned unless it is defective [POL-001].",
+  "answerable": true,
+  "citations": [
+   "SM-PH-005",
+   "POL-001"
+  ],
+  "dropped_citations": [],
+  "source_ids": [
+   "POL-001",
+   "SM-PH-005"
+  ],
+  "model": "gemini-3.5-flash",
+  "temperature": 1.5,
+  "latency_s": 4.54,
+  "input_tokens": 717,
+  "output_tokens": 562
+ }
+}

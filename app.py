@@ -9,6 +9,7 @@ import pandas as pd
 import streamlit as st
 from shopmind.config import DB_PATH, DOCS_DIR, EMBEDDING_MODEL, GEMINI_MODEL, ROOT
 from shopmind.documents import chunk_documents, load_documents
+from shopmind.generation import Generator
 from shopmind.retrieval import Retriever, SearchFilters
 
 st.set_page_config(page_title="ShopMind Explorer", page_icon="🛒", layout="wide")
@@ -30,11 +31,50 @@ def sql(query: str, params=()) -> pd.DataFrame:
 
 
 st.title("🛒 ShopMind Explorer")
-st.caption("Phase 0 (setup), Phase 1 (data and indexing) and Phase 2 (retrieval).")
+st.caption("Phase 0 (setup), Phase 1 (data and indexing), Phase 2 (retrieval) and Phase 3 (generation).")
 
-tab_setup, tab_docs, tab_chunks, tab_search, tab_eval, tab_sql = st.tabs(
-    ["⚙️ Setup", "📄 Documents", "✂️ Chunks", "🔎 Search", "📊 Retrieval eval", "🗄️ SQL database"]
+tab_ask, tab_setup, tab_docs, tab_chunks, tab_search, tab_eval, tab_gen_eval, tab_sql = st.tabs(
+    ["💬 Ask", "⚙️ Setup", "📄 Documents", "✂️ Chunks", "🔎 Search", "📊 Retrieval eval", "📝 Generation eval",
+     "🗄️ SQL database"]
 )
+
+# ---------------------------------------------------------------- Ask (Phase 3)
+with tab_ask:
+    st.subheader("Phase 3: ask ShopMind")
+    st.caption("Retrieves the best chunks, then Gemini answers from them only, with citations. "
+               "Each new question uses 1 to 2 Gemini requests (free tier: about 20 per day); repeats come from the cache.")
+    examples = ["can I return the Pixel 10a?", "ازاي ارجع منتج فتحته؟", "how much is delivery to Alexandria?",
+                "what is the price of the iPhone 17 Pro Max?"]
+    picked = st.pills("Examples (already cached, cost nothing)", examples)
+    with st.form("ask"):
+        question = st.text_input("Your question (English or Arabic)", value=picked or "")
+        submitted = st.form_submit_button("Ask", type="primary")
+    if (submitted or picked) and question:
+        try:
+            with st.spinner("Searching and writing the answer..."):
+                res = Generator(retriever()).answer(question)
+        except Exception as e:
+            st.error(f"Gemini could not answer right now ({type(e).__name__}). "
+                     "The free daily limit may be used up; try again later or pick a cached example.")
+        else:
+            if res.answerable:
+                st.success(res.answer)
+            else:
+                st.warning(res.answer)
+                st.caption("The sources did not contain the answer, so ShopMind did not guess.")
+            m1, m2, m3, m4 = st.columns(4)
+            m1.metric("Citations", ", ".join(res.citations) or "none")
+            m2.metric("Latency", "cached" if res.cached else f"{res.latency_s} s")
+            m3.metric("Tokens in / out", f"{res.input_tokens} / {res.output_tokens}")
+            m4.metric("Model", res.model.replace("gemini-", ""))
+            if res.dropped_citations:
+                st.error(f"Removed citations that were not in the sources: {res.dropped_citations}")
+            st.markdown("**Sources shown to the model**")
+            for h in res.hits:
+                used = "✅ cited" if h.doc_id in res.citations else "not cited"
+                with st.expander(f"{h.doc_id} · {h.properties['title']} · {used}"):
+                    st.caption(f"section: {h.properties['section']}")
+                    st.text(h.text)
 
 # ---------------------------------------------------------------- Setup
 with tab_setup:
@@ -177,6 +217,17 @@ with tab_eval:
             st.markdown(report.read_text(encoding="utf-8"))
         else:
             st.info("Run `python scripts/eval_retrieval.py` to create the evaluation report.")
+
+# ---------------------------------------------------------------- Generation eval (Phase 3)
+with tab_gen_eval:
+    view_findings, view_numbers = st.tabs(["Findings and decisions", "Full numbers and answers"])
+    for view, name in [(view_findings, "generation_findings.md"), (view_numbers, "generation_eval.md")]:
+        with view:
+            path = ROOT / "reports" / name
+            if path.exists():
+                st.markdown(path.read_text(encoding="utf-8"))
+            else:
+                st.info("Run `python scripts/eval_generation.py` to create this report.")
 
 # ---------------------------------------------------------------- SQL
 with tab_sql:

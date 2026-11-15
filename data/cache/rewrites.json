@@ -250,5 +250,41 @@
   "min_price": null,
   "max_price": null,
   "include_archived": false
+ },
+ "how long do card refunds take?": {
+  "query": "card refund processing time policy",
+  "doc_type": "policy",
+  "category": "returns",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "what is the price of the iPhone 17 Pro Max?": {
+  "query": "iPhone 17 Pro Max price",
+  "doc_type": "product",
+  "category": "phones",
+  "brand": "Apple",
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "how much does a screen repair cost outside the warranty?": {
+  "query": "out of warranty screen repair cost service fee",
+  "doc_type": "policy",
+  "category": "warranty",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "who is the CEO of ShopMind?": {
+  "query": "ShopMind CEO executive team company information",
+  "doc_type": "faq",
+  "category": "store",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
  }
 }

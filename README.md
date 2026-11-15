@@ -23,7 +23,7 @@ This is a capstone project that applies *LangChain Essentials (v1)* and *Retriev
 - [x] **Phase 0: Setup** (environment, keys, Weaviate, tracing)
 - [x] **Phase 1: Data and indexing** (40 documents, SQLite store, chunking, embeddings in Weaviate)
 - [x] **Phase 2: Retrieval** (BM25, semantic, hybrid + RRF, filtering, query rewriting, reranking): see [findings](reports/retrieval_findings.md)
-- [ ] **Phase 3: Generation** (citations, "I don't know", model comparison)
+- [x] **Phase 3: Generation** (citations, "I don't know", model comparison): see [findings](reports/generation_findings.md)
 - [ ] **Phase 4: Agent** (tools, MCP, memory, streaming, structured output, human-in-the-loop)
 - [ ] **Phase 5: Evaluation and production** (golden set, Precision@K / Recall@K, LLM-as-judge, cost, latency, security)
 - [ ] **Phase 6: Deliverables** (architecture diagram, eval report, demo)
@@ -41,6 +41,7 @@ python scripts/seed_db.py   # builds data/shop.db
 python scripts/ingest.py    # chunks, embeds and stores the documents in Weaviate
 python scripts/check_index.py
 python scripts/eval_retrieval.py   # compares every retrieval setup on 28 labeled questions
+python scripts/eval_generation.py  # checks answers, refusals and citations on 10 questions
 streamlit run app.py        # local explorer at http://localhost:8501
 ```
 
@@ -75,3 +76,19 @@ cross-encoder reranking, and query rewriting with Gemini (`shopmind/query_rewrit
 | **Rewrite + Hybrid RRF (default)** | **1.00** | **0.98** |
 
 Full numbers: [reports/retrieval_eval.md](reports/retrieval_eval.md). What we learned and why: [reports/retrieval_findings.md](reports/retrieval_findings.md).
+
+## Generation (Phase 3)
+
+`shopmind/generation.py` answers a question from the retrieved chunks only. The reply carries `[doc_id]`
+citations, says it does not know when the sources have no answer, and any citation that was not retrieved
+is removed in code. Answers are cached on disk because the free Gemini tier allows about 20 requests per model per day.
+
+| | gemini-3.5-flash (default) | gemini-3.5-flash-lite |
+|---|---|---|
+| Facts correct | 10/10 | 9/10 |
+| Correct "I don't know" | 3/3 | 3/3 |
+| Made-up citations | 0 | 0 |
+| Replies in the customer's language | 10/10 | 5/10 |
+| Average latency | 4.2 s | 1.0 s |
+
+Details: [reports/generation_findings.md](reports/generation_findings.md) and [reports/generation_eval.md](reports/generation_eval.md).

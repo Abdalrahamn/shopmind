@@ -1,0 +1,23 @@
+[
+  {"id": "g01", "question": "how many days do I have to return a product I already opened?", "answerable": true,
+   "must_include": ["14"], "relevant": ["POL-001", "FAQ-005"], "type": "policy"},
+  {"id": "g02", "question": "how much is delivery to Alexandria?", "answerable": true,
+   "must_include": ["75"], "relevant": ["POL-002"], "type": "policy"},
+  {"id": "g03", "question": "pay over 6 months with no interest", "answerable": true,
+   "must_include": ["6", "3,000"], "relevant": ["POL-005"], "type": "policy"},
+  {"id": "g04", "question": "can I return the Pixel 10a?", "answerable": true,
+   "must_include": ["defective"], "relevant": ["SM-PH-005", "POL-001"], "type": "multi-doc"},
+  {"id": "g05", "question": "ازاي ارجع منتج فتحته؟", "answerable": true,
+   "must_include": ["14"], "relevant": ["POL-001", "FAQ-005"], "type": "arabic", "language": "ar"},
+  {"id": "g06", "question": "مصاريف الشحن كام؟", "answerable": true,
+   "must_include": ["50", "75"], "relevant": ["POL-002"], "type": "arabic", "language": "ar"},
+  {"id": "g07", "question": "how long do card refunds take?", "answerable": true,
+   "must_include": ["5", "10"], "must_not_include": ["14 business days"], "relevant": ["POL-001", "FAQ-006"],
+   "type": "archived trap", "note": "The archived 2024 policy says 14 business days; the current one says 5 to 10."},
+  {"id": "g08", "question": "what is the price of the iPhone 17 Pro Max?", "answerable": false,
+   "must_not_include": ["57,999", "57999"], "type": "unanswerable",
+   "note": "Only the iPhone 17 is in the catalogue. Its price must not be given as the Pro Max price."},
+  {"id": "g09", "question": "how much does a screen repair cost outside the warranty?", "answerable": false,
+   "type": "unanswerable"},
+  {"id": "g10", "question": "who is the CEO of ShopMind?", "answerable": false, "type": "unanswerable"}
+]
