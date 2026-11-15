@@ -3,11 +3,13 @@
 Run: streamlit run app.py   (then open http://localhost:8501)
 """
 import asyncio
+
 import json
 import os
 import queue
 import sqlite3
 import threading
+from contextlib import closing
 
 import pandas as pd
 import streamlit as st
@@ -32,7 +34,7 @@ def documents():
 
 
 def sql(query: str, params=()) -> pd.DataFrame:
-    with sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True) as con:  # read-only
+    with closing(sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True)) as con:  # read-only, closed after use
         return pd.read_sql_query(query, con, params=params)
 
 
