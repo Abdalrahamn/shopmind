@@ -2,15 +2,21 @@
 
 Run: streamlit run app.py   (then open http://localhost:8501)
 """
+import asyncio
+import json
 import os
+import queue
 import sqlite3
+import threading
 
 import pandas as pd
 import streamlit as st
 from shopmind.config import DB_PATH, DOCS_DIR, EMBEDDING_MODEL, GEMINI_MODEL, ROOT
 from shopmind.documents import chunk_documents, load_documents
+from shopmind.agent import build_agent, run_turn
 from shopmind.generation import Generator
 from shopmind.retrieval import Retriever, SearchFilters
+from shopmind.tools import UserContext
 
 st.set_page_config(page_title="ShopMind Explorer", page_icon="🛒", layout="wide")
 
@@ -31,12 +37,128 @@ def sql(query: str, params=()) -> pd.DataFrame:
 
 
 st.title("🛒 ShopMind Explorer")
-st.caption("Phase 0 (setup), Phase 1 (data and indexing), Phase 2 (retrieval) and Phase 3 (generation).")
+st.caption("Phases 0 to 4: setup, data and indexing, retrieval, generation, and the agent.")
 
-tab_ask, tab_setup, tab_docs, tab_chunks, tab_search, tab_eval, tab_gen_eval, tab_sql = st.tabs(
-    ["💬 Ask", "⚙️ Setup", "📄 Documents", "✂️ Chunks", "🔎 Search", "📊 Retrieval eval", "📝 Generation eval",
+tab_agent, tab_ask, tab_setup, tab_docs, tab_chunks, tab_search, tab_eval, tab_gen_eval, tab_sql = st.tabs(
+    ["🤖 Agent", "💬 Ask", "⚙️ Setup", "📄 Documents", "✂️ Chunks", "🔎 Search", "📊 Retrieval eval", "📝 Generation eval",
      "🗄️ SQL database"]
 )
+
+# ---------------------------------------------------------------- Agent (Phase 4)
+@st.cache_resource
+def agent_loop():
+    """One background event loop for all agent work. The agent's network clients are tied to the
+    loop they were created in, so every turn must run in this same loop."""
+    loop = asyncio.new_event_loop()
+    threading.Thread(target=loop.run_forever, daemon=True).start()
+    return loop
+
+
+@st.cache_resource
+def agent():
+    # built once; its memory lives as long as this page's server
+    return asyncio.run_coroutine_threadsafe(build_agent(), agent_loop()).result()
+
+
+USERS = {
+    "Customer: Khaled Zaki": UserContext("customer", "Khaled Zaki", 20),
+    "Staff: Mona (store manager)": UserContext("staff", "Mona (store manager)"),
+}
+
+
+def play_turn(user_input, thread_id, ctx):
+    """Run one agent turn and draw each step as it arrives (streaming)."""
+    record = {"steps": [], "answer": None, "pending": None}
+    steps_box = st.status("Working...", expanded=True)
+
+    events: queue.Queue = queue.Queue()
+
+    async def produce():  # runs in the background loop and hands each event to this page
+        try:
+            async for ev in run_turn(the_agent, user_input, thread_id, ctx):
+                events.put(ev)
+            events.put(None)
+        except Exception as e:
+            events.put(e)
+
+    the_agent = agent()
+    asyncio.run_coroutine_threadsafe(produce(), agent_loop())
+    while (ev := events.get()) is not None:
+        if isinstance(ev, Exception):
+            steps_box.update(label="Failed", state="error")
+            st.error(f"The agent could not finish ({type(ev).__name__}: {str(ev)[:160]}). "
+                     "Gemini's free daily limit may be used up; try again later.")
+            return None
+        if ev["type"] == "tool_call":
+            line = f"🔧 calls `{ev['name']}` with `{json.dumps(ev['args'], ensure_ascii=False)}`"
+        elif ev["type"] == "tool_result":
+            line = f"📥 `{ev['name']}` returned: {ev['content'][:300]}"
+        elif ev["type"] == "approval_needed":
+            record["pending"] = ev
+            line = f"⏸️ paused: `{ev['name']}` with `{json.dumps(ev['args'])}` needs approval"
+        else:
+            r = ev["reply"]
+            record["answer"] = {"text": r.answer, "route": r.route, "sources": r.sources, "model": ev["model"]}
+            continue
+        record["steps"].append(line)
+        steps_box.write(line)
+    steps_box.update(label=f"{len(record['steps'])} steps", state="complete", expanded=False)
+    return record
+
+
+def draw_answer(a):
+    st.markdown(a["text"])
+    st.caption(f"route: {a['route']} · sources: {', '.join(a['sources']) or 'none'} · answered by {a['model']}")
+
+
+with tab_agent:
+    st.subheader("Phase 4: chat with the agent")
+    st.caption("The agent picks the tool for each question: documents, SQL, your orders, live stock (MCP), or cancelling "
+               "an order (needs your approval). Each message uses 2 to 4 Gemini requests from a small free daily quota.")
+    who = st.radio("You are", list(USERS), horizontal=True)
+    ctx = USERS[who]
+    chat = st.session_state.setdefault("chats", {}).setdefault(who, {"thread": f"ui-{who}-{os.urandom(3).hex()}",
+                                                                      "turns": [], "pending": None})
+    if ctx.role == "customer":
+        st.caption("Try: *what is the return policy for opened products?* · *عايز لابتوب للدراسة تحت 25 الف ومتوفر* · "
+                   "*show my orders* · *cancel my order 1268*")
+    else:
+        st.caption("Try: *who are our top 5 customers by spending?* · *which products are out of stock?* · "
+                   "*how many orders were cancelled?*")
+
+    for t in chat["turns"]:
+        with st.chat_message("user"):
+            st.markdown(t["user"])
+        with st.chat_message("assistant"):
+            with st.expander(f"{len(t['steps'])} steps"):
+                for line in t["steps"]:
+                    st.write(line)
+            if t["answer"]:
+                draw_answer(t["answer"])
+
+    def finish(user_text, record):
+        if record is None:
+            return
+        chat["turns"].append({"user": user_text, "steps": record["steps"], "answer": record["answer"]})
+        chat["pending"] = record["pending"]
+        st.rerun()
+
+    if chat["pending"]:
+        p = chat["pending"]
+        st.warning(f"The agent wants to run **{p['name']}** with `{json.dumps(p['args'])}`. This changes the database.")
+        b1, b2, _ = st.columns([1, 1, 4])
+        if b1.button("✅ Approve", type="primary"):
+            with st.chat_message("assistant"):
+                finish("*(approved the action)*", play_turn({"type": "approve"}, chat["thread"], ctx))
+        if b2.button("❌ Reject"):
+            with st.chat_message("assistant"):
+                finish("*(rejected the action)*",
+                       play_turn({"type": "reject", "message": "The user rejected this action."}, chat["thread"], ctx))
+    elif prompt := st.chat_input("Message ShopMind"):
+        with st.chat_message("user"):
+            st.markdown(prompt)
+        with st.chat_message("assistant"):
+            finish(prompt, play_turn(prompt, chat["thread"], ctx))
 
 # ---------------------------------------------------------------- Ask (Phase 3)
 with tab_ask:

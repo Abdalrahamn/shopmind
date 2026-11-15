@@ -24,7 +24,7 @@ This is a capstone project that applies *LangChain Essentials (v1)* and *Retriev
 - [x] **Phase 1: Data and indexing** (40 documents, SQLite store, chunking, embeddings in Weaviate)
 - [x] **Phase 2: Retrieval** (BM25, semantic, hybrid + RRF, filtering, query rewriting, reranking): see [findings](reports/retrieval_findings.md)
 - [x] **Phase 3: Generation** (citations, "I don't know", model comparison): see [findings](reports/generation_findings.md)
-- [ ] **Phase 4: Agent** (tools, MCP, memory, streaming, structured output, human-in-the-loop)
+- [x] **Phase 4: Agent** (tools, MCP, memory, streaming, structured output, dynamic prompt, human-in-the-loop): see [findings](reports/agent_findings.md) and the [demo transcript](reports/agent_demo.md)
 - [ ] **Phase 5: Evaluation and production** (golden set, Precision@K / Recall@K, LLM-as-judge, cost, latency, security)
 - [ ] **Phase 6: Deliverables** (architecture diagram, eval report, demo)
 
@@ -42,6 +42,7 @@ python scripts/ingest.py    # chunks, embeds and stores the documents in Weaviat
 python scripts/check_index.py
 python scripts/eval_retrieval.py   # compares every retrieval setup on 28 labeled questions
 python scripts/eval_generation.py  # checks answers, refusals and citations on 10 questions
+python scripts/demo_agent.py       # the agent answers the demo questions, step by step
 streamlit run app.py        # local explorer at http://localhost:8501
 ```
 
@@ -92,3 +93,19 @@ is removed in code. Answers are cached on disk because the free Gemini tier allo
 | Average latency | 4.2 s | 1.0 s |
 
 Details: [reports/generation_findings.md](reports/generation_findings.md) and [reports/generation_eval.md](reports/generation_eval.md).
+
+## Agent (Phase 4)
+
+`shopmind/agent.py` builds one agent with LangChain v1's `create_agent`. For each question it decides where the answer lives:
+
+| Question | Tool |
+|---|---|
+| Policies, FAQs, product advice | `search_store_docs` (hybrid search, optional type / category / price filters) |
+| Sales and records (staff only) | `query_database` (one read-only SELECT) |
+| The customer's own orders | `get_my_orders` |
+| Live stock | `check_stock`, served by an MCP server (`shopmind/mcp_server.py`) |
+| Cancel an order | `cancel_order`, paused until a human approves |
+
+It also has memory per conversation, a prompt that changes with the user's role, a structured final reply,
+step-by-step streaming, and model fallbacks for the free tier's daily limits. Access rules are enforced in the
+tools' code, not only in the prompt. Try it in the explorer's **Agent** tab (`streamlit run app.py`).

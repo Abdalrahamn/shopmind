@@ -1,0 +1,145 @@
+"""Phase 4: the ShopMind agent.
+
+One agent, built with LangChain v1's `create_agent`, that decides for each
+question where the answer lives:
+
+    store documents  -> search_store_docs     (RAG, Phases 1 to 3)
+    numbers/records  -> query_database        (SQL, staff only)
+    my own orders    -> get_my_orders
+    live stock       -> check_stock           (comes from the MCP server)
+    cancel an order  -> cancel_order          (pauses for human approval)
+
+Pieces from the LangChain Essentials course, and where they are below:
+    tools + MCP          build_agent()
+    memory               the checkpointer + thread_id
+    dynamic prompt       role_prompt()
+    human-in-the-loop    HumanInTheLoopMiddleware
+    structured output    SupportReply
+    streaming            run_turn()
+"""
+from __future__ import annotations
+
+import sys
+from typing import Literal
+
+from langchain.agents import create_agent
+from langchain.agents.middleware import (HumanInTheLoopMiddleware, ModelFallbackMiddleware, ModelRequest,
+                                         dynamic_prompt)
+from langchain.agents.structured_output import ToolStrategy
+from langchain.chat_models import init_chat_model
+from langchain_mcp_adapters.client import MultiServerMCPClient
+from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.types import Command
+from pydantic import BaseModel, Field
+
+from shopmind.config import AGENT_FALLBACKS, AGENT_MODEL, ROOT
+from shopmind.tools import LOCAL_TOOLS, UserContext
+
+BASE_PROMPT = """You are ShopMind, the assistant of ShopMind Electronics, an online electronics store in Egypt.
+
+How to work:
+- Policies, how things work, product advice: call search_store_docs. Answer only from what it returns
+  and cite the document ids in square brackets, for example [POL-001].
+- Whether a product is available: call check_stock. Never guess stock from a product page.
+- When a question needs two sources (for example "a phone under 15,000 that is in stock"), call both tools.
+- To cancel an order, call cancel_order with the order id. A human approves it before it runs.
+- If the tools do not give you the answer, say you do not know and suggest calling support on 19555.
+  Never invent prices, dates, stock or policies.
+- Reply in the user's language (Egyptian Arabic if they write in Arabic). Be short and friendly.
+"""
+
+CUSTOMER_RULES = """
+You are talking to a customer: {name} (customer id {customer_id}).
+- For their orders use get_my_orders. You cannot see other customers' data and must not try.
+- You cannot run SQL for customers.
+"""
+
+STAFF_RULES = """
+You are talking to a staff member: {name}.
+- For numbers and records (sales, top customers, order counts) write a SQL SELECT and call query_database.
+- You may show business data to staff. Format amounts in EGP.
+"""
+
+
+@dynamic_prompt
+def role_prompt(request: ModelRequest) -> str:
+    """Dynamic prompt: built again before every model call from who is logged in."""
+    ctx: UserContext = request.runtime.context
+    rules = STAFF_RULES if ctx.role == "staff" else CUSTOMER_RULES
+    return BASE_PROMPT + rules.format(name=ctx.name, customer_id=ctx.customer_id)
+
+
+class SupportReply(BaseModel):
+    """The agent's final reply. A fixed shape, so the app can show each part separately."""
+    answer: str = Field(description="The reply to the user, with [doc_id] citations after facts from documents")
+    sources: list[str] = Field(default_factory=list, description="Document ids cited, e.g. POL-001")
+    route: Literal["documents", "database", "stock", "action", "mixed", "none"] = Field(
+        description="Where the answer came from: documents (search), database (SQL or orders), stock, "
+                    "action (an order was changed), mixed (more than one), none (could not answer)")
+
+
+def _model(name: str):
+    return init_chat_model(f"google_genai:{name}", temperature=0, max_retries=1, timeout=60)
+
+
+async def build_agent(checkpointer=None):
+    """Create the agent. Async because the MCP tools are fetched from the server first."""
+    mcp_client = MultiServerMCPClient({
+        "inventory": {"transport": "stdio", "command": sys.executable,
+                      "args": [str(ROOT / "shopmind" / "mcp_server.py")]},
+    })
+    mcp_tools = await mcp_client.get_tools()          # -> [check_stock]
+
+    return create_agent(
+        model=_model(AGENT_MODEL),
+        tools=[*LOCAL_TOOLS, *mcp_tools],
+        context_schema=UserContext,                    # who is logged in; tools and the prompt read it
+        response_format=ToolStrategy(SupportReply),    # structured final answer
+        checkpointer=checkpointer or InMemorySaver(),  # memory: saves the conversation per thread_id
+        middleware=[
+            role_prompt,
+            # The free Gemini tier allows ~20 requests per model per day: move to the next model on failure.
+            ModelFallbackMiddleware(*[_model(m) for m in AGENT_FALLBACKS]),
+            # Pause before cancel_order runs and wait for a human decision.
+            HumanInTheLoopMiddleware(interrupt_on={"cancel_order": True}),
+        ],
+    )
+
+
+async def run_turn(agent, user_input, thread_id: str, context: UserContext):
+    """Run one turn and yield simple events while it happens (streaming).
+
+    user_input is either the user's text, or a decision on a paused action:
+        {"type": "approve"}  or  {"type": "reject", "message": "why"}
+
+    Events:
+        {"type": "tool_call", "name", "args"}
+        {"type": "tool_result", "name", "content"}
+        {"type": "approval_needed", "name", "args"}   the agent is paused
+        {"type": "answer", "reply": SupportReply, "model": name of the model that answered}
+    """
+    config = {"configurable": {"thread_id": thread_id}}
+    if isinstance(user_input, dict):
+        payload = Command(resume={"decisions": [user_input]})
+    else:
+        payload = {"messages": [{"role": "user", "content": user_input}]}
+
+    model_used = "unknown"  # which model actually answered (the fallback may have stepped in)
+    async for update in agent.astream(payload, config, context=context, stream_mode="updates"):
+        for node, data in update.items():
+            if node == "__interrupt__":
+                for request in data[0].value["action_requests"]:
+                    yield {"type": "approval_needed", "name": request["name"], "args": request["args"]}
+                continue
+            if "HumanInTheLoop" in node:
+                continue  # after approval this node repeats the tool call we already showed
+            for msg in (data or {}).get("messages", []):
+                if msg.type == "ai":
+                    model_used = msg.response_metadata.get("model_name", model_used)
+                    for call in msg.tool_calls:
+                        if call["name"] != SupportReply.__name__:
+                            yield {"type": "tool_call", "name": call["name"], "args": call["args"]}
+                elif msg.type == "tool" and msg.name != SupportReply.__name__:
+                    yield {"type": "tool_result", "name": msg.name, "content": str(msg.content)}
+            if (data or {}).get("structured_response") is not None:
+                yield {"type": "answer", "reply": data["structured_response"], "model": model_used}

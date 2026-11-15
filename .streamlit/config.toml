@@ -2,6 +2,7 @@
 address = "localhost"
 port = 8501
 headless = true
+fileWatcherType = "poll"  # the default watcher overflowed on the .venv folder
 
 [browser]
 gatherUsageStats = false
