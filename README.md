@@ -25,7 +25,7 @@ This is a capstone project that applies *LangChain Essentials (v1)* and *Retriev
 - [x] **Phase 2: Retrieval** (BM25, semantic, hybrid + RRF, filtering, query rewriting, reranking): see [findings](reports/retrieval_findings.md)
 - [x] **Phase 3: Generation** (citations, "I don't know", model comparison): see [findings](reports/generation_findings.md)
 - [x] **Phase 4: Agent** (tools, MCP, memory, streaming, structured output, dynamic prompt, human-in-the-loop): see [findings](reports/agent_findings.md) and the [demo transcript](reports/agent_demo.md)
-- [ ] **Phase 5: Evaluation and production** (golden set, Precision@K / Recall@K, LLM-as-judge, cost, latency, security)
+- [x] **Phase 5: Evaluation and production** (golden set, Precision / Recall, LLM-as-judge, cost, latency, security): see [results](reports/golden_eval.md), [failure cases](reports/failure_cases.md), [security tests](reports/security_tests.md), [cost and latency](reports/production_notes.md)
 - [ ] **Phase 6: Deliverables** (architecture diagram, eval report, demo)
 
 ## Getting started
@@ -43,6 +43,8 @@ python scripts/check_index.py
 python scripts/eval_retrieval.py   # compares every retrieval setup on 28 labeled questions
 python scripts/eval_generation.py  # checks answers, refusals and citations on 10 questions
 python scripts/demo_agent.py       # the agent answers the demo questions, step by step
+python scripts/test_security.py    # 14 direct attacks on the tools, no LLM needed
+python scripts/eval_golden.py      # 25-question golden set through the agent, with an LLM judge (resumable)
 streamlit run app.py        # local explorer at http://localhost:8501
 ```
 
@@ -109,3 +111,23 @@ Details: [reports/generation_findings.md](reports/generation_findings.md) and [r
 It also has memory per conversation, a prompt that changes with the user's role, a structured final reply,
 step-by-step streaming, and model fallbacks for the free tier's daily limits. Access rules are enforced in the
 tools' code, not only in the prompt. Try it in the explorer's **Agent** tab (`streamlit run app.py`).
+
+## Evaluation (Phase 5)
+
+`scripts/eval_golden.py` runs 25 questions (documents, products and stock, SQL, orders, unanswerable, security)
+through the real agent and grades tool choice, retrieval, facts, safety, language, latency and tokens, plus an
+LLM judge. First run, 24 of 25 questions, answered by fallback lite models because the main model's free quota was used up:
+
+| Metric | Result |
+|---|---|
+| Right tool chosen | 24/24 |
+| Correct (LLM judge) | 23/24 |
+| Grounded (LLM judge) | 23/24 |
+| Retrieval Recall / Precision | 0.95 / 0.63 |
+| Paused before changing data, database unchanged | 2/2, 2/2 |
+| Security questions with no data leak | 3/3 |
+| Replied in the user's language | 6/24 → 7/7 on re-run after the fix |
+| Latency | median 28.4 s (free-tier fallbacks; 3 to 6 s when the first model answers) |
+
+The evaluation led to three fixes in the agent (language set in code, a cap on searches, a search safety net).
+One failure is still open. All seven are written up in [reports/failure_cases.md](reports/failure_cases.md).

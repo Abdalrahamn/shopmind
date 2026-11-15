@@ -19,12 +19,13 @@ Pieces from the LangChain Essentials course, and where they are below:
 """
 from __future__ import annotations
 
+import re
 import sys
 from typing import Literal
 
 from langchain.agents import create_agent
 from langchain.agents.middleware import (HumanInTheLoopMiddleware, ModelFallbackMiddleware, ModelRequest,
-                                         dynamic_prompt)
+                                         ToolCallLimitMiddleware, dynamic_prompt)
 from langchain.agents.structured_output import ToolStrategy
 from langchain.chat_models import init_chat_model
 from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -45,7 +46,10 @@ How to work:
 - To cancel an order, call cancel_order with the order id. A human approves it before it runs.
 - If the tools do not give you the answer, say you do not know and suggest calling support on 19555.
   Never invent prices, dates, stock or policies.
-- Reply in the user's language (Egyptian Arabic if they write in Arabic). Be short and friendly.
+- Search queries: keep the exact product names and key words from the question (for example
+  "Pixel 10a return", not just "return policy"). A question about a specific product needs that product's page.
+- Search at most three times per question. If the answer is still missing, stop and say you do not know.
+- Be short and friendly.
 """
 
 CUSTOMER_RULES = """
@@ -66,7 +70,20 @@ def role_prompt(request: ModelRequest) -> str:
     """Dynamic prompt: built again before every model call from who is logged in."""
     ctx: UserContext = request.runtime.context
     rules = STAFF_RULES if ctx.role == "staff" else CUSTOMER_RULES
-    return BASE_PROMPT + rules.format(name=ctx.name, customer_id=ctx.customer_id)
+    return BASE_PROMPT + rules.format(name=ctx.name, customer_id=ctx.customer_id) + language_rule(request.messages)
+
+
+def language_rule(messages) -> str:
+    """Decide the reply language in code and state it as a fact.
+
+    The golden evaluation showed the smaller models replying in Arabic to English
+    questions when the prompt only said "reply in the user's language". Detecting
+    the language here (any Arabic letter in the last user message) is exact and free.
+    """
+    last_user = next((m.content for m in reversed(messages) if m.type == "human"), "")
+    if re.search("[\u0600-\u06FF]", str(last_user)):
+        return "\nThe user's last message is in Arabic. Write your answer in Egyptian Arabic."
+    return "\nThe user's last message is in English. Write your answer in English only, not Arabic."
 
 
 class SupportReply(BaseModel):
@@ -100,13 +117,15 @@ async def build_agent(checkpointer=None):
             role_prompt,
             # The free Gemini tier allows ~20 requests per model per day: move to the next model on failure.
             ModelFallbackMiddleware(*[_model(m) for m in AGENT_FALLBACKS]),
+            # Stop search loops: the evaluation caught 10 searches for one unanswerable question.
+            ToolCallLimitMiddleware(tool_name="search_store_docs", run_limit=3),
             # Pause before cancel_order runs and wait for a human decision.
             HumanInTheLoopMiddleware(interrupt_on={"cancel_order": True}),
         ],
     )
 
 
-async def run_turn(agent, user_input, thread_id: str, context: UserContext):
+async def run_turn(agent, user_input, thread_id: str, context: UserContext, callbacks=None, tags=None):
     """Run one turn and yield simple events while it happens (streaming).
 
     user_input is either the user's text, or a decision on a paused action:
@@ -118,7 +137,8 @@ async def run_turn(agent, user_input, thread_id: str, context: UserContext):
         {"type": "approval_needed", "name", "args"}   the agent is paused
         {"type": "answer", "reply": SupportReply, "model": name of the model that answered}
     """
-    config = {"configurable": {"thread_id": thread_id}}
+    # callbacks: e.g. a token counter. tags: labels that show up on the trace in LangSmith.
+    config = {"configurable": {"thread_id": thread_id}, "callbacks": callbacks or [], "tags": tags or []}
     if isinstance(user_input, dict):
         payload = Command(resume={"decisions": [user_input]})
     else:

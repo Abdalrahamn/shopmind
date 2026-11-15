@@ -37,11 +37,11 @@ def sql(query: str, params=()) -> pd.DataFrame:
 
 
 st.title("🛒 ShopMind Explorer")
-st.caption("Phases 0 to 4: setup, data and indexing, retrieval, generation, and the agent.")
+st.caption("Phases 0 to 5: setup, data and indexing, retrieval, generation, the agent, and evaluation.")
 
-tab_agent, tab_ask, tab_setup, tab_docs, tab_chunks, tab_search, tab_eval, tab_gen_eval, tab_sql = st.tabs(
+tab_agent, tab_ask, tab_setup, tab_docs, tab_chunks, tab_search, tab_eval, tab_gen_eval, tab_golden, tab_sql = st.tabs(
     ["🤖 Agent", "💬 Ask", "⚙️ Setup", "📄 Documents", "✂️ Chunks", "🔎 Search", "📊 Retrieval eval", "📝 Generation eval",
-     "🗄️ SQL database"]
+     "🧪 Golden eval + security", "🗄️ SQL database"]
 )
 
 # ---------------------------------------------------------------- Agent (Phase 4)
@@ -350,6 +350,18 @@ with tab_gen_eval:
                 st.markdown(path.read_text(encoding="utf-8"))
             else:
                 st.info("Run `python scripts/eval_generation.py` to create this report.")
+
+# ---------------------------------------------------------------- Golden eval (Phase 5)
+with tab_golden:
+    names = {"Golden set results": "golden_eval.md", "Failure cases": "failure_cases.md",
+             "Security tests": "security_tests.md", "Cost, latency and tracing": "production_notes.md"}
+    for view, name in zip(st.tabs(list(names)), names.values()):
+        with view:
+            path = ROOT / "reports" / name
+            if path.exists():
+                st.markdown(path.read_text(encoding="utf-8"))
+            else:
+                st.info(f"`reports/{name}` has not been created yet.")
 
 # ---------------------------------------------------------------- SQL
 with tab_sql:

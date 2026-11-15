@@ -46,7 +46,7 @@ def get_retriever() -> Retriever:
 def search_store_docs(query: str, doc_type: Literal["policy", "faq", "product"] | None = None,
                       product_category: Literal["phones", "laptops", "audio", "accessories", "smart-home",
                                                 "gaming"] | None = None,
-                      max_price_egp: float | None = None) -> str:
+                      max_price_egp: float | None = None, runtime: ToolRuntime[UserContext] = None) -> str:
     """Search the store's documents: policies (returns, shipping, warranty, payment, instalments,
     cancellation, loyalty), FAQs, and product pages with specs and prices.
 
@@ -59,10 +59,25 @@ def search_store_docs(query: str, doc_type: Literal["policy", "faq", "product"] 
         max_price_egp: maximum product price in EGP, only when the customer gives a budget.
     """
     filters = SearchFilters(doc_type=doc_type, category=product_category, max_price=max_price_egp)
-    hits = get_retriever().search(query, method="hybrid", k=5, filters=filters)
+    retriever = get_retriever()
+    hits = retriever.search(query, method="hybrid", k=5, filters=filters)
+
+    # Safety net found in the Phase 5 evaluation: a model sometimes drops the key word when it writes
+    # the query ("can I return the Pixel 10a?" became "return policy"), so the product page was never
+    # found and the answer was wrong. We also search with the customer's own words and add what is new.
+    question = _last_user_message(runtime)
+    if question and question != query and not re.search("[\u0600-\u06FF]", question):  # embeddings are English-only
+        seen = {h.id for h in hits}
+        hits += [h for h in retriever.search(question, method="hybrid", k=3, filters=filters) if h.id not in seen]
+
     if not hits:
         return "No documents matched. Tell the customer you do not have this information."
     return "\n\n".join(f"[{h.doc_id}] {h.properties['title']}\n{h.text}" for h in hits)
+
+
+def _last_user_message(runtime) -> str:
+    messages = (getattr(runtime, "state", None) or {}).get("messages", [])
+    return next((str(m.content) for m in reversed(messages) if m.type == "human"), "")
 
 
 def _read_only():
