@@ -60,6 +60,19 @@ def search_store_docs(query: str, doc_type: Literal["policy", "faq", "product"] 
     """
     filters = SearchFilters(doc_type=doc_type, category=product_category, max_price=max_price_egp)
     retriever = get_retriever()
+
+    # Third Phase 5 fix: the embeddings are English-only, but a small model sometimes ignores "write the
+    # query in English" and searches in Arabic ("فروع ومواعيد عمل"), finds nothing useful and then guesses.
+    # An Arabic query goes through the Phase 2 query rewriter first (one cheap, cached model call that
+    # returns an English query). If that fails, the tool asks the model to translate and try again.
+    if re.search("[\u0600-\u06FF]", query):
+        try:
+            query = retriever.rewrite(query).query
+        except Exception:
+            query = ""
+        if not query or re.search("[\u0600-\u06FF]", query):
+            return ("The search index is English-only and this query is in Arabic. "
+                    "Call search_store_docs again with the query translated to English.")
     hits = retriever.search(query, method="hybrid", k=5, filters=filters)
 
     # Safety net found in the Phase 5 evaluation: a model sometimes drops the key word when it writes
@@ -72,7 +85,18 @@ def search_store_docs(query: str, doc_type: Literal["policy", "faq", "product"] 
 
     if not hits:
         return "No documents matched. Tell the customer you do not have this information."
-    return "\n\n".join(f"[{h.doc_id}] {h.properties['title']}\n{h.text}" for h in hits)
+    return "\n\n".join(f"[{h.doc_id}] {h.properties['title']}{_clearance_note(h)}\n{h.text}" for h in hits)
+
+
+def _clearance_note(hit) -> str:
+    """Second Phase 5 fix for the Pixel 10a question: the product page was retrieved, but a small model
+    still answered "yes, you can return it" from the general policy. "Clearance" is a metadata field we
+    already store, so the tool states its consequence next to the product instead of hoping the model
+    connects two documents."""
+    if hit.properties.get("clearance"):
+        return ("\nIMPORTANT: this product is a CLEARANCE item = final sale. It CANNOT be returned or exchanged "
+                "for a change of mind, even inside the normal return window. Only a defective unit can be returned.")
+    return ""
 
 
 def _last_user_message(runtime) -> str:

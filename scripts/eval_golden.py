@@ -52,6 +52,12 @@ if "--after-fixes" in sys.argv:
     JUDGE_FILE = CACHE_DIR / "golden_judge_after_fixes.json"
     REPORT_FILE = ROOT / "reports" / "golden_eval_after_fixes.md"
     TITLE = "Golden set: re-run of selected questions after the fixes"
+# --full-rerun  runs all 25 questions again with the current agent, kept apart from the first run.
+if "--full-rerun" in sys.argv:
+    RUNS_FILE = CACHE_DIR / "golden_runs_v2.json"
+    JUDGE_FILE = CACHE_DIR / "golden_judge_v2.json"
+    REPORT_FILE = ROOT / "reports" / "golden_eval_v2.md"
+    TITLE = "Golden set: full re-run with the fixed agent"
 PAUSE = 8          # seconds between questions (requests-per-minute limit)
 JUDGE_BATCH = 5    # answers per judge request, to save quota
 CONTEXTS = {"customer": UserContext("customer", "Khaled Zaki", 20), "staff": UserContext("staff", "Mona (store manager)")}
@@ -155,6 +161,7 @@ saw (tool results), and the assistant's answer. Give two independent marks:
   A missing key fact, a wrong number, or answering when the reference says to refuse = false.
   The answer may be in Arabic or English; judge the meaning, not the language.
 - grounded: is every fact in the answer supported by the evidence? Anything not in the evidence = false.
+  Greeting the user by the name given in "Asked by" is not an invented fact.
 
 Return one verdict per item, using the same ids.
 
@@ -175,7 +182,9 @@ def judge_missing(runs: dict) -> None:
         for q in batch:
             r = runs[q["id"]]
             evidence = "\n".join(f"({t['name']}) {t['content'][:1500]}" for t in r["tool_results"]) or "(no tool was called)"
-            items.append(f"### id: {q['id']}\nQuestion: {q['question']}\nReference: {q['reference']}\n"
+            who = CONTEXTS[q["role"]]   # the judge marked "Hi Mona" as invented: tell it who is asking
+            items.append(f"### id: {q['id']}\nAsked by: {who.name} ({who.role})\n"
+                         f"Question: {q['question']}\nReference: {q['reference']}\n"
                          f"Evidence:\n{evidence}\nAssistant's answer: {r['answer']}")
         try:
             out = judge.invoke(JUDGE_PROMPT.format(items="\n\n".join(items)))
@@ -193,10 +202,10 @@ def judge_missing(runs: dict) -> None:
 # ------------------------------------------------------------------ 3. grade and report
 def grade(q: dict, r: dict) -> dict:
     called = [t["name"] for t in r["tools"]]
-    text = r["answer"].replace(",", "")
+    text = r["answer"].replace(",", "").lower()   # "Liquid" must match "liquid": found in the full re-run
     g = {"tool_ok": set(q["expected_tools"]) <= set(called)}
-    g["facts_ok"] = (all(f.replace(",", "") in text for f in q.get("must_include", []))
-                     and not any(f.replace(",", "") in text for f in q.get("must_not_include", [])))
+    g["facts_ok"] = (all(f.replace(",", "").lower() in text for f in q.get("must_include", []))
+                     and not any(f.replace(",", "").lower() in text for f in q.get("must_not_include", [])))
     if q["relevant_docs"]:
         retrieved = set(r["retrieved"])  # a document can come back as several chunks: count it once
         hit = retrieved & set(q["relevant_docs"])

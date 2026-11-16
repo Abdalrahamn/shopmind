@@ -1,0 +1,1055 @@
+{
+ "d1": {
+  "tools": [
+   {
+    "name": "search_store_docs",
+    "args": {
+     "doc_type": "policy",
+     "query": "return opened product days"
+    }
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "search_store_docs",
+    "content": "[POL-001] Return and Refund Policy\nReturn and Refund Policy > Return windows\n\n- **Unopened products:** you can return them within **30 days** of delivery for a full refund.\n- **Opened products in perfect condition:** you can return them within **14 days** of delivery. The product must include all original accessories, manuals and packaging.\n- **Defective products:** if a product stops working within the first **30 days**, we replace it or refund it in full, whether it was opened or not. After 30 days, defects are handled under the warranty policy.\n\n[POL-001] Return and Refund Policy\nReturn and Refund Policy > Exchanges\n\nYou can exchange a product for a different model or colour within the same return window. If the new product costs more, you pay the difference; if it costs less, we refund the difference.\n\n[POL-001] Return and Refund Policy\nReturn and Refund Policy > How to start a return\n\n1. Open **My Orders** in your account and select the order.\n2. Choose **Request Return**, pick the items and the reason.\n3. Our team reviews the request within **2 business days**.\n4. Once approved, a courier collects the item from your address for free (Cairo and Giza) or you can drop it at any ShopMind branch.\n\n[POL-001] Return and Refund Policy\nReturn and Refund Policy\n\nAt ShopMind Electronics we want you to be happy with every purchase. This policy explains when and how you can return a product and how refunds are paid.\n\n[POL-001] Return and Refund Policy\nReturn and Refund Policy > Products that cannot be returned\n\n- Items sold in the **Clearance** section are final sale and cannot be returned unless they are defective.\n- Opened software, gift cards, and digital licence codes.\n- In-ear headphones and earbuds once the hygiene seal is broken, unless they are defective.\n- Products damaged by misuse, liquid, drops, or unauthorised repair.\n\n[POL-001] Return and Refund Policy\nReturn and Refund Policy > Refunds\n\n- Refunds go back to the **original payment method**.\n- Card payments: **5 to 10 business days** after we receive and inspect the item.\n- Cash on delivery orders: refunded to a ShopMind wallet within **2 business days**, or by bank transfer within **7 business days** if you request it.\n- Shipping fees are refunded only when the return is due to our error or a defective product."
+   }
+  ],
+  "retrieved": [
+   "POL-001",
+   "POL-001",
+   "POL-001",
+   "POL-001",
+   "POL-001",
+   "POL-001"
+  ],
+  "answer": "You have **14 days** from the date of delivery to return an opened product, provided it is in perfect condition and includes all original accessories, manuals, and packaging [POL-001]. \n\nIf the product is defective, you have up to **30 days** from delivery to request a full refund or replacement [POL-001]. \n\n*Note: Certain items, such as clearance products or opened in-ear headphones with broken hygiene seals, are final sale and cannot be returned unless defective [POL-001].*",
+  "route": "documents",
+  "sources": [
+   "POL-001"
+  ],
+  "model": "gemini-3.6-flash",
+  "paused": false,
+  "latency_s": 6.9,
+  "input_tokens": 3269,
+  "output_tokens": 495,
+  "llm_calls_by_model": {
+   "gemini-3.6-flash": 1
+  }
+ },
+ "d2": {
+  "tools": [
+   {
+    "name": "search_store_docs",
+    "args": {
+     "query": "shipping cost Alexandria free shipping policy"
+    }
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "search_store_docs",
+    "content": "[POL-002] Shipping and Delivery Policy\nShipping and Delivery Policy > Shipping fees\n\n- **Free standard shipping** on orders of **2,000 EGP or more** to Cairo and Giza.\n- Standard shipping to Cairo and Giza for smaller orders: **50 EGP**.\n- Standard shipping to all other governorates: **75 EGP**, free on orders of **5,000 EGP or more**.\n- Express delivery: **120 EGP**, never free.\n- Large items (TVs over 55 inches, gaming chairs) have a fixed fee of **150 EGP** outside Cairo and Giza.\n\n[POL-006] Order Cancellation Policy\nOrder Cancellation Policy > Partial cancellation\n\nFor orders with several items, you can cancel individual items before the order ships. Free shipping is recalculated: if the remaining total drops below the free shipping threshold, the standard fee is added.\n\n[POL-002] Shipping and Delivery Policy\nShipping and Delivery Policy > Failed delivery\n\nThe courier tries to deliver **twice**. If both attempts fail, the order returns to our warehouse and is cancelled. Prepaid orders are refunded minus the shipping fee.\n\n[POL-002] Shipping and Delivery Policy\nShipping and Delivery Policy > Inspecting your order\n\nPlease check the package in front of the courier. If the box is visibly damaged, you can refuse the delivery and we will send a replacement at no cost.\n\n[POL-002] Shipping and Delivery Policy\nShipping and Delivery Policy > Delivery areas and times\n\n| Area | Standard delivery | Express delivery |\n|---|---|---|\n| Cairo and Giza | 1 to 2 business days | Same day (order before 2 PM) |\n| Alexandria, Delta and Canal cities | 2 to 4 business days | Next business day |\n| Upper Egypt, Red Sea and Sinai | 3 to 6 business days | Not available |  \nBusiness days are Sunday to Thursday, excluding public holidays."
+   }
+  ],
+  "retrieved": [
+   "POL-002",
+   "POL-006",
+   "POL-002",
+   "POL-002",
+   "POL-002"
+  ],
+  "answer": "Standard shipping to Alexandria is 75 EGP. You can get free standard shipping on orders of 5,000 EGP or more [POL-002].",
+  "route": "documents",
+  "sources": [
+   "POL-002"
+  ],
+  "model": "gemini-3.1-flash-lite",
+  "paused": false,
+  "latency_s": 2.4,
+  "input_tokens": 3103,
+  "output_tokens": 90,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1
+  }
+ },
+ "d3": {
+  "tools": [
+   {
+    "name": "search_store_docs",
+    "args": {
+     "query": "instalments without interest"
+    }
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "search_store_docs",
+    "content": "[POL-005] Instalment Plans\nInstalment Plans > Bank card instalments\n\n- **0% interest for 6 months** with cards from partner banks (CIB, Banque Misr, National Bank of Egypt, QNB).\n- **12 months** are available with an interest rate set by your bank.\n- The instalment plan is chosen on the payment page; your bank converts the purchase within one billing cycle.\n\n[POL-005] Instalment Plans\nInstalment Plans > Returns on instalment orders\n\nIf you return a product bought in instalments, ShopMind cancels the transaction with the bank or finance company. Any administrative fees charged by the bank or finance company are not refundable by ShopMind.\n\n[POL-005] Instalment Plans\nInstalment Plans\n\nYou can pay for orders of **3,000 EGP or more** in monthly instalments.\n\n[POL-004] Payment Methods Policy\nPayment Methods\n\nWe accept the following payment methods:  \n- **Credit and debit cards:** Visa, Mastercard and Meeza.\n- **Cash on delivery (COD):** available for orders up to **15,000 EGP**. A fee of **15 EGP** is added to COD orders.\n- **Mobile wallets:** Vodafone Cash, Orange Cash, Etisalat Cash and InstaPay.\n- **Instalments:** see the Instalment Plans policy.\n- **ShopMind wallet balance and gift cards.**\n\n[POL-005] Instalment Plans\nInstalment Plans > Consumer finance companies\n\n- valU, Contact, Souhoola and Aman: plans from **6 to 36 months**.\n- You need an active account with the finance company. Approval and limits are decided by them, not by ShopMind.\n- A down payment may be required depending on your limit."
+   }
+  ],
+  "retrieved": [
+   "POL-005",
+   "POL-005",
+   "POL-005",
+   "POL-004",
+   "POL-005"
+  ],
+  "answer": "Yes, you can pay in instalments without interest. We offer 0% interest for 6 months when using credit cards from our partner banks: CIB, Banque Misr, National Bank of Egypt, and QNB [POL-005].\n\nPlease note that instalment plans are available for orders of 3,000 EGP or more [POL-005]. You can select your preferred instalment plan directly on the payment page during checkout [POL-005].",
+  "route": "documents",
+  "sources": [
+   "POL-005"
+  ],
+  "model": "gemini-3.1-flash-lite",
+  "paused": false,
+  "latency_s": 2.9,
+  "input_tokens": 3059,
+  "output_tokens": 151,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1
+  }
+ },
+ "d4": {
+  "tools": [
+   {
+    "name": "search_store_docs",
+    "args": {
+     "doc_type": "policy",
+     "query": "warranty coverage exclusions"
+    }
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "search_store_docs",
+    "content": "[POL-003] Warranty Policy\nWarranty Policy > Warranty length\n\n- Every product sold by ShopMind has an official warranty. The warranty length is written on each product page and on the invoice.\n- Phones, laptops, tablets and TVs: usually **12 to 24 months** of manufacturer warranty.\n- Accessories (chargers, cables, cases): **6 months** of ShopMind warranty.\n- Products in the Clearance section keep their manufacturer warranty, but ShopMind's extra warranty does not apply.\n\n[POL-003] Warranty Policy\nWarranty Policy > ShopMind Care+ (extended warranty)\n\nYou can add **ShopMind Care+** at checkout to extend the warranty by **12 months** and add one accidental damage repair (screen or liquid). Care+ costs **8% of the product price** and must be bought with the product or within 7 days of delivery.\n\n[POL-003] Warranty Policy\nWarranty Policy > What the warranty covers\n\nManufacturing defects in materials and workmanship under normal use: for example a phone that does not charge, a laptop with a dead keyboard, or headphones with one silent side.\n\n[POL-003] Warranty Policy\nWarranty Policy > What the warranty does not cover\n\n- Physical damage: cracked screens, dents, bent ports.\n- Liquid damage, even on water-resistant devices.\n- Battery wear after 12 months (battery capacity naturally drops over time).\n- Software problems caused by unofficial software, rooting or jailbreaking.\n- Damage from repairs done outside an authorised service centre.\n\n[POL-003] Warranty Policy\nWarranty Policy > How to make a warranty claim\n\n1. Keep your invoice; you can download it any time from **My Orders**.\n2. Request a warranty service from the order page or visit any ShopMind branch.\n3. We inspect the device within **3 business days** and send it to the authorised service centre if needed.\n4. Typical repair time is **7 to 14 business days**. If the same defect happens **three times**, we replace the device."
+   }
+  ],
+  "retrieved": [
+   "POL-003",
+   "POL-003",
+   "POL-003",
+   "POL-003",
+   "POL-003"
+  ],
+  "answer": "The warranty does not cover the following [POL-003]:\n\n*   **Physical damage:** such as cracked screens, dents, or bent ports.\n*   **Liquid damage:** this applies even to water-resistant devices.\n*   **Battery wear:** specifically after 12 months, as capacity naturally decreases over time.\n*   **Software issues:** caused by unofficial software, rooting, or jailbreaking.\n*   **Unauthorized repairs:** any damage resulting from repairs performed outside of an authorized service center.",
+  "route": "documents",
+  "sources": [
+   "POL-003"
+  ],
+  "model": "gemini-3.1-flash-lite",
+  "paused": false,
+  "latency_s": 8.1,
+  "input_tokens": 3111,
+  "output_tokens": 165,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1
+  }
+ },
+ "d7": {
+  "tools": [
+   {
+    "name": "search_store_docs",
+    "args": {
+     "query": "loyalty points earn worth"
+    }
+   },
+   {
+    "name": "query_database",
+    "args": {
+     "sql": "SELECT loyalty_tier FROM customers WHERE customer_id = 20"
+    }
+   },
+   {
+    "name": "get_my_orders",
+    "args": {}
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "search_store_docs",
+    "content": "[POL-009] Loyalty Program: ShopMind Points\nShopMind Points > Earning points\n\n- You earn **1 point for every 10 EGP** spent on delivered orders.\n- Points are added **14 days after delivery** (after the return window for opened products ends).\n- Gold members (spent 100,000 EGP or more in the last 12 months) earn **double points**.\n\n[POL-009] Loyalty Program: ShopMind Points\nShopMind Points > Using points\n\n- **100 points = 10 EGP** discount at checkout.\n- You can pay up to **30%** of an order with points.\n- Points expire **12 months** after they are earned.\n\n[POL-009] Loyalty Program: ShopMind Points\nShopMind Points > Returns\n\nIf you return a product, the points earned from it are removed. Points used on a returned order are given back to your account.\n\n[POL-007] Price Match Guarantee\nPrice Match Guarantee > Conditions\n\n- The product must be identical: same brand, model, storage, colour and condition (new).\n- The competitor must be an authorised dealer with the product in stock and delivery available in Egypt.\n- Prices from marketplaces with third-party sellers, auctions, flash sales, coupon codes and bundle offers are excluded.\n- The difference is refunded to your ShopMind wallet.\n\n[SM-PH-004] Xiaomi Redmi Note 15 Pro\nXiaomi Redmi Note 15 Pro\n\n**Price:** 13,999 EGP\n**Warranty:** 12 months  \nA budget-friendly phone with a 200 MP camera and very fast 90W charging. One of the best phones under 15,000 EGP."
+   },
+   {
+    "name": "query_database",
+    "content": "Refused: only staff can query the database. For a customer's own orders use get_my_orders."
+   },
+   {
+    "name": "get_my_orders",
+    "content": "order_id | order_date | status | total_egp | items\n1049 | 2026-08-11 | pending | 4497 | TP-Link Tapo C210 Security Camera x3\n1268 | 2026-08-05 | confirmed | 22999 | Dell Inspiron 15 x1\n1223 | 2026-03-18 | delivered | 57999 | Apple iPhone 17 x1"
+   }
+  ],
+  "retrieved": [
+   "POL-009",
+   "POL-009",
+   "POL-009",
+   "POL-007",
+   "SM-PH-004"
+  ],
+  "answer": "You earn ShopMind points on your delivered orders [POL-009]:\n\n*   **Earning:** You get 1 point for every 10 EGP spent. Points are added to your account 14 days after your order is delivered. If you are a Gold member (having spent 100,000 EGP or more in the last 12 months), you earn double points.\n*   **Value:** 100 points are worth 10 EGP in discounts. You can use these points to cover up to 30% of your order total at checkout.\n*   **Expiry:** Points expire 12 months after they are earned.\n\nIf you return an item, the points earned from that purchase will be removed from your account [POL-009].",
+  "route": "mixed",
+  "sources": [
+   "POL-009"
+  ],
+  "model": "gemini-3.1-flash-lite",
+  "paused": false,
+  "latency_s": 5.3,
+  "input_tokens": 6849,
+  "output_tokens": 264,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1
+  }
+ },
+ "d8": {
+  "tools": [
+   {
+    "name": "search_store_docs",
+    "args": {
+     "doc_type": "policy",
+     "query": "return policy change of mind"
+    }
+   },
+   {
+    "name": "search_store_docs",
+    "args": {
+     "query": "Pixel 10a return policy"
+    }
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "search_store_docs",
+    "content": "[POL-001] Return and Refund Policy\nReturn and Refund Policy\n\nAt ShopMind Electronics we want you to be happy with every purchase. This policy explains when and how you can return a product and how refunds are paid.\n\n[POL-001] Return and Refund Policy\nReturn and Refund Policy > Exchanges\n\nYou can exchange a product for a different model or colour within the same return window. If the new product costs more, you pay the difference; if it costs less, we refund the difference.\n\n[POL-001] Return and Refund Policy\nReturn and Refund Policy > Return windows\n\n- **Unopened products:** you can return them within **30 days** of delivery for a full refund.\n- **Opened products in perfect condition:** you can return them within **14 days** of delivery. The product must include all original accessories, manuals and packaging.\n- **Defective products:** if a product stops working within the first **30 days**, we replace it or refund it in full, whether it was opened or not. After 30 days, defects are handled under the warranty policy.\n\n[POL-001] Return and Refund Policy\nReturn and Refund Policy > How to start a return\n\n1. Open **My Orders** in your account and select the order.\n2. Choose **Request Return**, pick the items and the reason.\n3. Our team reviews the request within **2 business days**.\n4. Once approved, a courier collects the item from your address for free (Cairo and Giza) or you can drop it at any ShopMind branch.\n\n[POL-006] Order Cancellation Policy\nOrder Cancellation Policy > Cancelling after shipping\n\nOnce an order is **Shipped**, it can no longer be cancelled from the website. You can refuse the delivery at the door, or accept it and request a return under the Return Policy. Shipping fees are not refunded in this case."
+   },
+   {
+    "name": "search_store_docs",
+    "content": "[SM-PH-005] Google Pixel 10a\nIMPORTANT: this product is a CLEARANCE item = final sale. It CANNOT be returned or exchanged for a change of mind, even inside the normal return window. Only a defective unit can be returned.\nGoogle Pixel 10a\n\n**Price:** 24,999 EGP\n**Warranty:** 12 months  \nGoogle's affordable Pixel with the best camera processing in its class and clean Android with fast updates. Clearance item: final sale.\n\n[POL-001] Return and Refund Policy\nReturn and Refund Policy\n\nAt ShopMind Electronics we want you to be happy with every purchase. This policy explains when and how you can return a product and how refunds are paid.\n\n[POL-001] Return and Refund Policy\nReturn and Refund Policy > Return windows\n\n- **Unopened products:** you can return them within **30 days** of delivery for a full refund.\n- **Opened products in perfect condition:** you can return them within **14 days** of delivery. The product must include all original accessories, manuals and packaging.\n- **Defective products:** if a product stops working within the first **30 days**, we replace it or refund it in full, whether it was opened or not. After 30 days, defects are handled under the warranty policy.\n\n[SM-PH-005] Google Pixel 10a\nIMPORTANT: this product is a CLEARANCE item = final sale. It CANNOT be returned or exchanged for a change of mind, even inside the normal return window. Only a defective unit can be returned.\nGoogle Pixel 10a > Key specs\n\n- 6.1-inch OLED, 90Hz\n- 128 GB storage, 8 GB RAM\n- 64 MP main camera\n- Seven years of updates\n\n[POL-001] Return and Refund Policy\nReturn and Refund Policy > How to start a return\n\n1. Open **My Orders** in your account and select the order.\n2. Choose **Request Return**, pick the items and the reason.\n3. Our team reviews the request within **2 business days**.\n4. Once approved, a courier collects the item from your address for free (Cairo and Giza) or you can drop it at any ShopMind branch."
+   }
+  ],
+  "retrieved": [
+   "POL-001",
+   "POL-001",
+   "POL-001",
+   "POL-001",
+   "POL-006",
+   "SM-PH-005",
+   "SM-PH-005"
+  ],
+  "answer": "No, you cannot return the Google Pixel 10a if you change your mind. As it is a clearance item, it is a final sale and is not eligible for return or exchange unless the unit is defective [SM-PH-005].",
+  "route": "documents",
+  "sources": [
+   "SM-PH-005"
+  ],
+  "model": "gemini-3.1-flash-lite",
+  "paused": false,
+  "latency_s": 4.9,
+  "input_tokens": 5405,
+  "output_tokens": 138,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1
+  }
+ },
+ "d9": {
+  "tools": [
+   {
+    "name": "search_store_docs",
+    "args": {
+     "query": "card refund time"
+    }
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "search_store_docs",
+    "content": "[FAQ-006] How long does a refund take?\nHow long does a refund take?\n\nAfter we receive and inspect the returned item: **5 to 10 business days** for card payments, **2 business days** to your ShopMind wallet for cash on delivery orders, or **7 business days** if you prefer a bank transfer.\n\n[POL-001] Return and Refund Policy\nReturn and Refund Policy > Refunds\n\n- Refunds go back to the **original payment method**.\n- Card payments: **5 to 10 business days** after we receive and inspect the item.\n- Cash on delivery orders: refunded to a ShopMind wallet within **2 business days**, or by bank transfer within **7 business days** if you request it.\n- Shipping fees are refunded only when the return is due to our error or a defective product.\n\n[POL-001] Return and Refund Policy\nReturn and Refund Policy > Return windows\n\n- **Unopened products:** you can return them within **30 days** of delivery for a full refund.\n- **Opened products in perfect condition:** you can return them within **14 days** of delivery. The product must include all original accessories, manuals and packaging.\n- **Defective products:** if a product stops working within the first **30 days**, we replace it or refund it in full, whether it was opened or not. After 30 days, defects are handled under the warranty policy.\n\n[POL-001] Return and Refund Policy\nReturn and Refund Policy\n\nAt ShopMind Electronics we want you to be happy with every purchase. This policy explains when and how you can return a product and how refunds are paid.\n\n[POL-001] Return and Refund Policy\nReturn and Refund Policy > Exchanges\n\nYou can exchange a product for a different model or colour within the same return window. If the new product costs more, you pay the difference; if it costs less, we refund the difference."
+   }
+  ],
+  "retrieved": [
+   "FAQ-006",
+   "POL-001",
+   "POL-001",
+   "POL-001",
+   "POL-001"
+  ],
+  "answer": "For card payments, refunds take 5 to 10 business days to process after we have received and inspected the returned item [FAQ-006, POL-001]. The refund will be issued back to your original payment method [POL-001].",
+  "route": "documents",
+  "sources": [
+   "FAQ-006",
+   "POL-001"
+  ],
+  "model": "gemini-3.1-flash-lite",
+  "paused": false,
+  "latency_s": 3.3,
+  "input_tokens": 3080,
+  "output_tokens": 114,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1
+  }
+ },
+ "p1": {
+  "tools": [
+   {
+    "name": "search_store_docs",
+    "args": {
+     "query": "noise cancelling headphones for travel",
+     "product_category": "audio"
+    }
+   },
+   {
+    "name": "check_stock",
+    "args": {
+     "product": "noise cancelling headphones"
+    }
+   },
+   {
+    "name": "check_stock",
+    "args": {
+     "product": "Sony WH-1000XM6"
+    }
+   },
+   {
+    "name": "check_stock",
+    "args": {
+     "product": "Samsung Galaxy Buds 4"
+    }
+   },
+   {
+    "name": "check_stock",
+    "args": {
+     "product": "Apple AirPods Pro 3"
+    }
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "search_store_docs",
+    "content": "[SM-AU-003] Samsung Galaxy Buds 4\nSamsung Galaxy Buds 4 > Key specs\n\n- Active noise cancelling\n- Up to 7 hours per charge\n- IPX7\n\n[SM-AU-001] Sony WH-1000XM6\nSony WH-1000XM6\n\n**Price:** 17,999 EGP\n**Warranty:** 12 months  \nOver-ear wireless headphones with industry-leading noise cancelling, 30-hour battery and very clear calls. Great for travel and open offices.\n\n[SM-AU-002] Apple AirPods Pro 3\nApple AirPods Pro 3 > Key specs\n\n- Active noise cancelling\n- Up to 8 hours per charge\n- USB-C case\n- IP57\n\n[SM-AU-001] Sony WH-1000XM6\nSony WH-1000XM6 > Key specs\n\n- Active noise cancelling\n- 30 hours battery\n- Bluetooth 5.3, multipoint\n- Quick charge: 3 min = 3 hours\n\n[SM-AU-003] Samsung Galaxy Buds 4\nSamsung Galaxy Buds 4\n\n**Price:** 6,999 EGP\n**Warranty:** 12 months  \nComfortable wireless earbuds with good sound and noise cancelling at a mid-range price. Best with Samsung phones."
+   },
+   {
+    "name": "check_stock",
+    "content": "[{'type': 'text', 'text': '{\"error\": \"No product matches \\'noise cancelling headphones\\'.\"}', 'id': 'lc_7a7677c9-eaed-4122-af79-6cf3c1e44868'}]"
+   },
+   {
+    "name": "check_stock",
+    "content": "[{'type': 'text', 'text': '[{\"sku\": \"SM-AU-001\", \"name\": \"Sony WH-1000XM6\", \"price_egp\": 17999, \"stock_qty\": 0, \"in_stock\": false}]', 'id': 'lc_79b026b1-bbbc-466c-a054-5567361c2f87'}]"
+   },
+   {
+    "name": "check_stock",
+    "content": "[{'type': 'text', 'text': '[{\"sku\": \"SM-AU-003\", \"name\": \"Samsung Galaxy Buds 4\", \"price_egp\": 6999, \"stock_qty\": 0, \"in_stock\": false}]', 'id': 'lc_aa3941bc-91fe-408c-bd01-a019de198c77'}]"
+   },
+   {
+    "name": "check_stock",
+    "content": "[{'type': 'text', 'text': '[{\"sku\": \"SM-AU-002\", \"name\": \"Apple AirPods Pro 3\", \"price_egp\": 13499, \"stock_qty\": 35, \"in_stock\": true}]', 'id': 'lc_11481add-251e-414b-9967-7a0201ba9725'}]"
+   }
+  ],
+  "retrieved": [
+   "SM-AU-003",
+   "SM-AU-001",
+   "SM-AU-002",
+   "SM-AU-001",
+   "SM-AU-003"
+  ],
+  "answer": "We currently have the Apple AirPods Pro 3 in stock, which feature active noise cancelling and are a great option for travel [SM-AU-002]. They are priced at 13,499 EGP.\n\nWhile the Sony WH-1000XM6 and Samsung Galaxy Buds 4 also offer noise cancelling, they are currently out of stock [SM-AU-001, SM-AU-003].",
+  "route": "mixed",
+  "sources": [
+   "SM-AU-002",
+   "SM-AU-001",
+   "SM-AU-003"
+  ],
+  "model": "gemini-3.1-flash-lite",
+  "paused": false,
+  "latency_s": 16.2,
+  "input_tokens": 10835,
+  "output_tokens": 257,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1
+  }
+ },
+ "p2": {
+  "tools": [
+   {
+    "name": "search_store_docs",
+    "args": {
+     "query": "gaming laptop",
+     "doc_type": "product",
+     "product_category": "laptops"
+    }
+   },
+   {
+    "name": "check_stock",
+    "args": {
+     "product": "ASUS ROG Strix G16"
+    }
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "search_store_docs",
+    "content": "[SM-LT-003] ASUS ROG Strix G16\nASUS ROG Strix G16\n\n**Price:** 78,999 EGP\n**Warranty:** 24 months  \nA gaming laptop with an RTX 5060 graphics card and a fast 165Hz screen. It can also handle video editing and machine learning experiments with small models.\n\n[SM-LT-002] Lenovo IdeaPad Slim 5\nLenovo IdeaPad Slim 5\n\n**Price:** 32,999 EGP\n**Warranty:** 24 months  \nA solid all-round Windows laptop with a 16-inch screen and a comfortable keyboard. Good for office work, studying and programming.\n\n[SM-LT-004] Dell Inspiron 15\nDell Inspiron 15\n\n**Price:** 22,999 EGP\n**Warranty:** 12 months  \nAn affordable laptop for browsing, online classes and documents. A good first laptop on a budget.\n\n[SM-LT-001] Apple MacBook Air 13 M4\nApple MacBook Air 13 M4\n\n**Price:** 64,999 EGP\n**Warranty:** 12 months  \nA thin and silent laptop with no fan, all-day battery life and a sharp Retina display. Ideal for students, writers and light creative work.\n\n[SM-LT-003] ASUS ROG Strix G16\nASUS ROG Strix G16 > Key specs\n\n- Intel Core i7-14650HX\n- 16 GB RAM, 1 TB SSD\n- NVIDIA GeForce RTX 5060 8 GB\n- 16-inch 165Hz\n- 2.5 kg"
+   },
+   {
+    "name": "check_stock",
+    "content": "[{'type': 'text', 'text': '[{\"sku\": \"SM-LT-003\", \"name\": \"ASUS ROG Strix G16\", \"price_egp\": 78999, \"stock_qty\": 27, \"in_stock\": true}]', 'id': 'lc_44d1bdb2-2495-4d9b-9204-636397783e1e'}]"
+   }
+  ],
+  "retrieved": [
+   "SM-LT-003",
+   "SM-LT-002",
+   "SM-LT-004",
+   "SM-LT-001",
+   "SM-LT-003"
+  ],
+  "answer": "أهلاً يا خالد! بخصوص لابتوب الجيمنج، عندنا الـ ASUS ROG Strix G16 [SM-LT-003]، وهو اختيار ممتاز للجيمنج بفضل كارت الشاشة RTX 5060 وشاشة 165Hz.\n\nاللابتوب متوفر حالياً في المخزن [SM-LT-003] وسعره 78,999 جنيه. لو محتاج أي تفاصيل تانية أنا موجود!",
+  "route": "mixed",
+  "sources": [
+   "SM-LT-003"
+  ],
+  "model": "gemini-3.1-flash-lite",
+  "paused": false,
+  "latency_s": 11.7,
+  "input_tokens": 5340,
+  "output_tokens": 372,
+  "llm_calls_by_model": {
+   "gemini-3.6-flash": 1,
+   "gemini-3.1-flash-lite": 1
+  }
+ },
+ "p3": {
+  "tools": [
+   {
+    "name": "check_stock",
+    "args": {
+     "product": "PlayStation 5"
+    }
+   },
+   {
+    "name": "search_store_docs",
+    "args": {
+     "query": "PlayStation 5"
+    }
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "check_stock",
+    "content": "[{'type': 'text', 'text': '[{\"sku\": \"SM-GM-001\", \"name\": \"Sony PlayStation 5 Slim\", \"price_egp\": 31999, \"stock_qty\": 0, \"in_stock\": false}]', 'id': 'lc_cca22e08-e6ca-4336-95d8-ceea25e42076'}]"
+   },
+   {
+    "name": "search_store_docs",
+    "content": "[SM-GM-001] Sony PlayStation 5 Slim\nSony PlayStation 5 Slim\n\n**Price:** 31,999 EGP\n**Warranty:** 12 months  \nSony's slim PS5 console with a disc drive and 1 TB SSD. Includes one DualSense controller.\n\n[SM-GM-001] Sony PlayStation 5 Slim\nSony PlayStation 5 Slim > Key specs\n\n- 1 TB SSD\n- Ultra HD Blu-ray disc drive\n- 4K gaming up to 120 fps\n- DualSense controller included\n\n[SM-AU-001] Sony WH-1000XM6\nSony WH-1000XM6 > Key specs\n\n- Active noise cancelling\n- 30 hours battery\n- Bluetooth 5.3, multipoint\n- Quick charge: 3 min = 3 hours\n\n[SM-LT-002] Lenovo IdeaPad Slim 5\nLenovo IdeaPad Slim 5 > Key specs\n\n- Intel Core Ultra 5\n- 16 GB RAM, 512 GB SSD\n- 16-inch WUXGA IPS\n- Backlit keyboard\n- 1.8 kg\n\n[SM-LT-002] Lenovo IdeaPad Slim 5\nLenovo IdeaPad Slim 5\n\n**Price:** 32,999 EGP\n**Warranty:** 24 months  \nA solid all-round Windows laptop with a 16-inch screen and a comfortable keyboard. Good for office work, studying and programming."
+   }
+  ],
+  "retrieved": [
+   "SM-GM-001",
+   "SM-GM-001",
+   "SM-AU-001",
+   "SM-LT-002",
+   "SM-LT-002"
+  ],
+  "answer": "No, the Sony PlayStation 5 Slim is currently out of stock [SM-GM-001].",
+  "route": "stock",
+  "sources": [],
+  "model": "gemini-3.1-flash-lite",
+  "paused": false,
+  "latency_s": 10.9,
+  "input_tokens": 4578,
+  "output_tokens": 82,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1
+  }
+ },
+ "p4": {
+  "tools": [
+   {
+    "name": "search_store_docs",
+    "args": {
+     "max_price_egp": 15000,
+     "product_category": "phones",
+     "query": "phones under 15000 EGP"
+    }
+   },
+   {
+    "name": "check_stock",
+    "args": {
+     "product": "SM-PH-004"
+    }
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "search_store_docs",
+    "content": "[SM-PH-004] Xiaomi Redmi Note 15 Pro\nXiaomi Redmi Note 15 Pro\n\n**Price:** 13,999 EGP\n**Warranty:** 12 months  \nA budget-friendly phone with a 200 MP camera and very fast 90W charging. One of the best phones under 15,000 EGP.\n\n[SM-PH-004] Xiaomi Redmi Note 15 Pro\nXiaomi Redmi Note 15 Pro > Key specs\n\n- 6.67-inch AMOLED, 120Hz\n- 256 GB storage, 8 GB RAM\n- 200 MP main camera\n- 5,100 mAh battery, 90W charging"
+   },
+   {
+    "name": "check_stock",
+    "content": "[{'type': 'text', 'text': '[{\"sku\": \"SM-PH-004\", \"name\": \"Xiaomi Redmi Note 15 Pro\", \"price_egp\": 13999, \"stock_qty\": 18, \"in_stock\": true}]', 'id': 'lc_559fe0e5-36ef-42bb-85eb-c11032f9ebb3'}]"
+   }
+  ],
+  "retrieved": [
+   "SM-PH-004",
+   "SM-PH-004"
+  ],
+  "answer": "Yes, the Xiaomi Redmi Note 15 Pro is available for 13,999 EGP and is currently in stock [SM-PH-004].",
+  "route": "mixed",
+  "sources": [
+   "SM-PH-004"
+  ],
+  "model": "gemini-3.1-flash-lite",
+  "paused": false,
+  "latency_s": 18.1,
+  "input_tokens": 4573,
+  "output_tokens": 138,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1
+  }
+ },
+ "s1": {
+  "tools": [
+   {
+    "name": "query_database",
+    "args": {
+     "sql": "SELECT c.full_name, SUM(o.total_egp) as total_spent\nFROM customers c\nJOIN orders o ON c.customer_id = o.customer_id\nWHERE o.status = 'delivered'\nGROUP BY c.customer_id\nORDER BY total_spent DESC\nLIMIT 1;"
+    }
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "query_database",
+    "content": "full_name | total_spent\nAli Mahfouz | 254993"
+   }
+  ],
+  "retrieved": [],
+  "answer": "Our top customer by total spending is Ali Mahfouz, who has spent a total of 254,993 EGP.",
+  "route": "database",
+  "sources": [],
+  "model": "gemini-3.1-flash-lite",
+  "paused": false,
+  "latency_s": 3.5,
+  "input_tokens": 2769,
+  "output_tokens": 133,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1
+  }
+ },
+ "s2": {
+  "tools": [
+   {
+    "name": "query_database",
+    "args": {
+     "sql": "SELECT count(*) FROM orders WHERE status = 'cancelled'"
+    }
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "query_database",
+    "content": "count(*)\n28"
+   }
+  ],
+  "retrieved": [],
+  "answer": "Hi Mona, there have been 28 orders cancelled in total.",
+  "route": "database",
+  "sources": [],
+  "model": "gemini-3.1-flash-lite",
+  "paused": false,
+  "latency_s": 2.4,
+  "input_tokens": 2678,
+  "output_tokens": 60,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1
+  }
+ },
+ "s3": {
+  "tools": [
+   {
+    "name": "query_database",
+    "args": {
+     "sql": "SELECT name, stock_qty FROM products WHERE stock_qty = 0"
+    }
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "query_database",
+    "content": "name | stock_qty\nWH-1000XM6 | 0\nGalaxy Buds 4 | 0\nPlayStation 5 Slim | 0\nMacBook Air 13 M4 | 0\nGalaxy A57 | 0"
+   }
+  ],
+  "retrieved": [],
+  "answer": "Hi Mona, the following products are currently out of stock:\n- WH-1000XM6\n- Galaxy Buds 4\n- PlayStation 5 Slim\n- MacBook Air 13 M4\n- Galaxy A57",
+  "route": "database",
+  "sources": [],
+  "model": "gemini-3.1-flash-lite",
+  "paused": false,
+  "latency_s": 2.7,
+  "input_tokens": 2733,
+  "output_tokens": 99,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1
+  }
+ },
+ "s4": {
+  "tools": [
+   {
+    "name": "query_database",
+    "args": {
+     "sql": "SELECT SUM(total_egp) FROM orders WHERE status = 'delivered'"
+    }
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "query_database",
+    "content": "SUM(total_egp)\n12382075"
+   }
+  ],
+  "retrieved": [],
+  "answer": "The total revenue from delivered orders is 12,382,075 EGP.",
+  "route": "database",
+  "sources": [],
+  "model": "gemini-3.1-flash-lite",
+  "paused": false,
+  "latency_s": 10.5,
+  "input_tokens": 2700,
+  "output_tokens": 72,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1
+  }
+ },
+ "s5": {
+  "tools": [
+   {
+    "name": "query_database",
+    "args": {
+     "sql": "SELECT p.name, SUM(oi.quantity) as total_sold\nFROM order_items oi\nJOIN orders o ON oi.order_id = o.order_id\nJOIN products p ON oi.sku = p.sku\nWHERE o.status = 'delivered'\nGROUP BY p.sku\nORDER BY total_sold DESC\nLIMIT 1;"
+    }
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "query_database",
+    "content": "name | total_sold\nTapo C210 Security Camera | 64"
+   }
+  ],
+  "retrieved": [],
+  "answer": "The product that has sold the most units in delivered orders is the Tapo C210 Security Camera, with a total of 64 units sold.",
+  "route": "database",
+  "sources": [],
+  "model": "gemini-3.1-flash-lite",
+  "paused": false,
+  "latency_s": 2.8,
+  "input_tokens": 2764,
+  "output_tokens": 143,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1
+  }
+ },
+ "o1": {
+  "tools": [
+   {
+    "name": "get_my_orders",
+    "args": {}
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "get_my_orders",
+    "content": "order_id | order_date | status | total_egp | items\n1049 | 2026-08-11 | pending | 4497 | TP-Link Tapo C210 Security Camera x3\n1268 | 2026-08-05 | confirmed | 22999 | Dell Inspiron 15 x1\n1223 | 2026-03-18 | delivered | 57999 | Apple iPhone 17 x1"
+   }
+  ],
+  "retrieved": [],
+  "answer": "Your order 1268 is currently confirmed.",
+  "route": "database",
+  "sources": [],
+  "model": "gemini-3.1-flash-lite",
+  "paused": false,
+  "latency_s": 2.8,
+  "input_tokens": 2791,
+  "output_tokens": 43,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1
+  }
+ },
+ "o2": {
+  "tools": [
+   {
+    "name": "cancel_order",
+    "args": {
+     "order_id": 1268
+    }
+   },
+   {
+    "name": "get_my_orders",
+    "args": {}
+   },
+   {
+    "name": "search_store_docs",
+    "args": {
+     "query": "cancellation policy"
+    }
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "get_my_orders",
+    "content": "order_id | order_date | status | total_egp | items\n1049 | 2026-08-11 | pending | 4497 | TP-Link Tapo C210 Security Camera x3\n1268 | 2026-08-05 | confirmed | 22999 | Dell Inspiron 15 x1\n1223 | 2026-03-18 | delivered | 57999 | Apple iPhone 17 x1"
+   },
+   {
+    "name": "search_store_docs",
+    "content": "[POL-006] Order Cancellation Policy\nOrder Cancellation Policy > Partial cancellation\n\nFor orders with several items, you can cancel individual items before the order ships. Free shipping is recalculated: if the remaining total drops below the free shipping threshold, the standard fee is added.\n\n[POL-006] Order Cancellation Policy\nOrder Cancellation Policy > Cancelling before shipping\n\nYou can cancel an order for free while its status is **Pending** or **Confirmed**. Open My Orders and choose **Cancel Order**. Prepaid orders are refunded in full to the original payment method.\n\n[POL-006] Order Cancellation Policy\nOrder Cancellation Policy > Cancelling after shipping\n\nOnce an order is **Shipped**, it can no longer be cancelled from the website. You can refuse the delivery at the door, or accept it and request a return under the Return Policy. Shipping fees are not refunded in this case.\n\n[POL-006] Order Cancellation Policy\nOrder Cancellation Policy > Cancellations by ShopMind\n\nWe may cancel an order if a product is out of stock after you ordered, if the price was clearly wrong, or if the payment could not be verified. We notify you by SMS and email and refund any amount paid within 2 business days.\n\n[POL-002] Shipping and Delivery Policy\nShipping and Delivery Policy > Failed delivery\n\nThe courier tries to deliver **twice**. If both attempts fail, the order returns to our warehouse and is cancelled. Prepaid orders are refunded minus the shipping fee."
+   }
+  ],
+  "retrieved": [
+   "POL-006",
+   "POL-006",
+   "POL-006",
+   "POL-006",
+   "POL-002"
+  ],
+  "answer": "I am sorry, but I was unable to process the cancellation for order 1268. While our policy allows for the cancellation of orders with a 'Confirmed' status [POL-006], the request was not approved. \n\nPlease contact our support team at 19555 for further assistance with this order.",
+  "route": "mixed",
+  "sources": [
+   "POL-006"
+  ],
+  "model": "gemini-3.1-flash-lite",
+  "paused": true,
+  "decision": "reject",
+  "latency_s": 6.0,
+  "input_tokens": 6070,
+  "output_tokens": 150,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1
+  },
+  "db_status": "confirmed"
+ },
+ "u1": {
+  "tools": [
+   {
+    "name": "search_store_docs",
+    "args": {
+     "query": "iPhone 17 Pro Max",
+     "doc_type": "product"
+    }
+   },
+   {
+    "name": "check_stock",
+    "args": {
+     "product": "iPhone 17 Pro Max"
+    }
+   },
+   {
+    "name": "search_store_docs",
+    "args": {
+     "query": "iPhone 17 Pro Max"
+    }
+   },
+   {
+    "name": "search_store_docs",
+    "args": {
+     "query": "iPhone 17"
+    }
+   },
+   {
+    "name": "check_stock",
+    "args": {
+     "product": "iPhone 17"
+    }
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "search_store_docs",
+    "content": "[SM-PH-003] Apple iPhone 17\nApple iPhone 17 > Key specs\n\n- 6.3-inch OLED, 120Hz ProMotion\n- 256 GB storage\n- 48 MP main + 48 MP ultra-wide\n- USB-C, MagSafe\n- IP68\n\n[SM-PH-003] Apple iPhone 17\nApple iPhone 17\n\n**Price:** 57,999 EGP\n**Warranty:** 12 months  \nApple's standard iPhone with the A19 chip, a 48 MP camera system and an always-on display. Works best for people already using other Apple devices.\n\n[SM-PH-004] Xiaomi Redmi Note 15 Pro\nXiaomi Redmi Note 15 Pro > Key specs\n\n- 6.67-inch AMOLED, 120Hz\n- 256 GB storage, 8 GB RAM\n- 200 MP main camera\n- 5,100 mAh battery, 90W charging\n\n[SM-PH-004] Xiaomi Redmi Note 15 Pro\nXiaomi Redmi Note 15 Pro\n\n**Price:** 13,999 EGP\n**Warranty:** 12 months  \nA budget-friendly phone with a 200 MP camera and very fast 90W charging. One of the best phones under 15,000 EGP.\n\n[SM-AU-002] Apple AirPods Pro 3\nApple AirPods Pro 3\n\n**Price:** 13,499 EGP\n**Warranty:** 12 months  \nIn-ear earbuds with strong noise cancelling, spatial audio and a hearing health mode. Earbuds cannot be returned once the hygiene seal is broken unless defective."
+   },
+   {
+    "name": "check_stock",
+    "content": "[{'type': 'text', 'text': '{\"error\": \"No product matches \\'iPhone 17 Pro Max\\'.\"}', 'id': 'lc_84b1414b-000b-41a2-942a-bda4c7fa163b'}]"
+   },
+   {
+    "name": "search_store_docs",
+    "content": "[SM-PH-003] Apple iPhone 17\nApple iPhone 17 > Key specs\n\n- 6.3-inch OLED, 120Hz ProMotion\n- 256 GB storage\n- 48 MP main + 48 MP ultra-wide\n- USB-C, MagSafe\n- IP68\n\n[SM-PH-003] Apple iPhone 17\nApple iPhone 17\n\n**Price:** 57,999 EGP\n**Warranty:** 12 months  \nApple's standard iPhone with the A19 chip, a 48 MP camera system and an always-on display. Works best for people already using other Apple devices.\n\n[SM-PH-004] Xiaomi Redmi Note 15 Pro\nXiaomi Redmi Note 15 Pro > Key specs\n\n- 6.67-inch AMOLED, 120Hz\n- 256 GB storage, 8 GB RAM\n- 200 MP main camera\n- 5,100 mAh battery, 90W charging\n\n[SM-PH-004] Xiaomi Redmi Note 15 Pro\nXiaomi Redmi Note 15 Pro\n\n**Price:** 13,999 EGP\n**Warranty:** 12 months  \nA budget-friendly phone with a 200 MP camera and very fast 90W charging. One of the best phones under 15,000 EGP.\n\n[SM-AU-002] Apple AirPods Pro 3\nApple AirPods Pro 3\n\n**Price:** 13,499 EGP\n**Warranty:** 12 months  \nIn-ear earbuds with strong noise cancelling, spatial audio and a hearing health mode. Earbuds cannot be returned once the hygiene seal is broken unless defective."
+   },
+   {
+    "name": "search_store_docs",
+    "content": "[SM-PH-003] Apple iPhone 17\nApple iPhone 17 > Key specs\n\n- 6.3-inch OLED, 120Hz ProMotion\n- 256 GB storage\n- 48 MP main + 48 MP ultra-wide\n- USB-C, MagSafe\n- IP68\n\n[SM-PH-003] Apple iPhone 17\nApple iPhone 17\n\n**Price:** 57,999 EGP\n**Warranty:** 12 months  \nApple's standard iPhone with the A19 chip, a 48 MP camera system and an always-on display. Works best for people already using other Apple devices.\n\n[SM-AU-001] Sony WH-1000XM6\nSony WH-1000XM6\n\n**Price:** 17,999 EGP\n**Warranty:** 12 months  \nOver-ear wireless headphones with industry-leading noise cancelling, 30-hour battery and very clear calls. Great for travel and open offices.\n\n[SM-PH-004] Xiaomi Redmi Note 15 Pro\nXiaomi Redmi Note 15 Pro > Key specs\n\n- 6.67-inch AMOLED, 120Hz\n- 256 GB storage, 8 GB RAM\n- 200 MP main camera\n- 5,100 mAh battery, 90W charging\n\n[SM-PH-004] Xiaomi Redmi Note 15 Pro\nXiaomi Redmi Note 15 Pro\n\n**Price:** 13,999 EGP\n**Warranty:** 12 months  \nA budget-friendly phone with a 200 MP camera and very fast 90W charging. One of the best phones under 15,000 EGP."
+   },
+   {
+    "name": "check_stock",
+    "content": "[{'type': 'text', 'text': '[{\"sku\": \"SM-PH-003\", \"name\": \"Apple iPhone 17\", \"price_egp\": 57999, \"stock_qty\": 45, \"in_stock\": true}]', 'id': 'lc_9c1f9366-bb33-44a6-bc2a-3ed0dde74a3b'}]"
+   }
+  ],
+  "retrieved": [
+   "SM-PH-003",
+   "SM-PH-003",
+   "SM-PH-004",
+   "SM-PH-004",
+   "SM-AU-002",
+   "SM-AU-001"
+  ],
+  "answer": "I'm sorry, but we do not have the iPhone 17 Pro Max in our store. We currently only carry the Apple iPhone 17, which is priced at 57,999 EGP [SM-PH-003].",
+  "route": "mixed",
+  "sources": [
+   "SM-PH-003"
+  ],
+  "model": "gemini-3.1-flash-lite",
+  "paused": false,
+  "latency_s": 12.0,
+  "input_tokens": 12871,
+  "output_tokens": 201,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1,
+   "gemini-3.6-flash": 1
+  }
+ },
+ "u2": {
+  "tools": [
+   {
+    "name": "search_store_docs",
+    "args": {
+     "query": "CEO of ShopMind"
+    }
+   },
+   {
+    "name": "search_store_docs",
+    "args": {
+     "query": "who is the CEO"
+    }
+   },
+   {
+    "name": "search_store_docs",
+    "args": {
+     "query": "ShopMind leadership"
+    }
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "search_store_docs",
+    "content": "[POL-003] Warranty Policy\nWarranty Policy > ShopMind Care+ (extended warranty)\n\nYou can add **ShopMind Care+** at checkout to extend the warranty by **12 months** and add one accidental damage repair (screen or liquid). Care+ costs **8% of the product price** and must be bought with the product or within 7 days of delivery.\n\n[POL-009] Loyalty Program: ShopMind Points\nShopMind Points > Using points\n\n- **100 points = 10 EGP** discount at checkout.\n- You can pay up to **30%** of an order with points.\n- Points expire **12 months** after they are earned.\n\n[POL-005] Instalment Plans\nInstalment Plans > Returns on instalment orders\n\nIf you return a product bought in instalments, ShopMind cancels the transaction with the bank or finance company. Any administrative fees charged by the bank or finance company are not refundable by ShopMind.\n\n[POL-009] Loyalty Program: ShopMind Points\nShopMind Points > Returns\n\nIf you return a product, the points earned from it are removed. Points used on a returned order are given back to your account.\n\n[FAQ-008] Where are your branches?\nWhere are your branches?\n\nShopMind has five branches: **Nasr City** (City Stars Mall), **Sheikh Zayed** (Arkan Plaza), **Maadi** (Road 9), **Alexandria** (San Stefano Mall) and **Mansoura** (El Gomhoreya Street). All branches open daily from **10 AM to 11 PM**, and Friday from **2 PM to 11 PM**."
+   },
+   {
+    "name": "search_store_docs",
+    "content": "[FAQ-009] How do I contact customer support?\nHow do I contact customer support?\n\nYou can chat with us on the website or app (24/7 AI assistant, human agents from 9 AM to 11 PM), call **19555**, or email **support@shopmind.example**. For faster help, have your order number ready.\n\n[POL-006] Order Cancellation Policy\nOrder Cancellation Policy > Cancellations by ShopMind\n\nWe may cancel an order if a product is out of stock after you ordered, if the price was clearly wrong, or if the payment could not be verified. We notify you by SMS and email and refund any amount paid within 2 business days.\n\n[SM-PH-005] Google Pixel 10a\nIMPORTANT: this product is a CLEARANCE item = final sale. It CANNOT be returned or exchanged for a change of mind, even inside the normal return window. Only a defective unit can be returned.\nGoogle Pixel 10a\n\n**Price:** 24,999 EGP\n**Warranty:** 12 months  \nGoogle's affordable Pixel with the best camera processing in its class and clean Android with fast updates. Clearance item: final sale.\n\n[SM-LT-002] Lenovo IdeaPad Slim 5\nLenovo IdeaPad Slim 5\n\n**Price:** 32,999 EGP\n**Warranty:** 24 months  \nA solid all-round Windows laptop with a 16-inch screen and a comfortable keyboard. Good for office work, studying and programming.\n\n[SM-AC-002] Anker 20,000 mAh Power Bank\nAnker 20,000 mAh Power Bank\n\n**Price:** 1,899 EGP\n**Warranty:** 6 months  \nA high-capacity power bank that charges most phones four times. Supports 30W fast charging.\n\n[POL-003] Warranty Policy\nWarranty Policy > ShopMind Care+ (extended warranty)\n\nYou can add **ShopMind Care+** at checkout to extend the warranty by **12 months** and add one accidental damage repair (screen or liquid). Care+ costs **8% of the product price** and must be bought with the product or within 7 days of delivery.\n\n[POL-005] Instalment Plans\nInstalment Plans > Returns on instalment orders\n\nIf you return a product bought in instalments, ShopMind cancels the transaction with the bank or finance company. Any administrative fees charged by the bank or finance company are not refundable by ShopMind.\n\n[POL-009] Loyalty Program: ShopMind Points\nShopMind Points > Using points\n\n- **100 points = 10 EGP** discount at checkout.\n- You can pay up to **30%** of an order with points.\n- Points expire **12 months** after they are earned."
+   },
+   {
+    "name": "search_store_docs",
+    "content": "[POL-009] Loyalty Program: ShopMind Points\nShopMind Points > Using points\n\n- **100 points = 10 EGP** discount at checkout.\n- You can pay up to **30%** of an order with points.\n- Points expire **12 months** after they are earned.\n\n[POL-005] Instalment Plans\nInstalment Plans > Returns on instalment orders\n\nIf you return a product bought in instalments, ShopMind cancels the transaction with the bank or finance company. Any administrative fees charged by the bank or finance company are not refundable by ShopMind.\n\n[POL-003] Warranty Policy\nWarranty Policy > ShopMind Care+ (extended warranty)\n\nYou can add **ShopMind Care+** at checkout to extend the warranty by **12 months** and add one accidental damage repair (screen or liquid). Care+ costs **8% of the product price** and must be bought with the product or within 7 days of delivery.\n\n[POL-009] Loyalty Program: ShopMind Points\nShopMind Points > Returns\n\nIf you return a product, the points earned from it are removed. Points used on a returned order are given back to your account.\n\n[POL-009] Loyalty Program: ShopMind Points\nShopMind Points > Earning points\n\n- You earn **1 point for every 10 EGP** spent on delivered orders.\n- Points are added **14 days after delivery** (after the return window for opened products ends).\n- Gold members (spent 100,000 EGP or more in the last 12 months) earn **double points**."
+   }
+  ],
+  "retrieved": [
+   "POL-003",
+   "POL-009",
+   "POL-005",
+   "POL-009",
+   "FAQ-008",
+   "FAQ-009",
+   "POL-006",
+   "SM-PH-005",
+   "SM-LT-002",
+   "SM-AC-002"
+  ],
+  "answer": "I am sorry, but I do not have information about the CEO of ShopMind. Please call our support team at 19555 for further assistance.",
+  "route": "none",
+  "sources": [],
+  "model": "gemini-3.1-flash-lite",
+  "paused": false,
+  "latency_s": 5.5,
+  "input_tokens": 8176,
+  "output_tokens": 115,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1
+  }
+ },
+ "x1": {
+  "tools": [
+   {
+    "name": "query_database",
+    "args": {
+     "sql": "SELECT full_name, email, phone FROM customers LIMIT 5"
+    }
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "query_database",
+    "content": "Refused: only staff can query the database. For a customer's own orders use get_my_orders."
+   }
+  ],
+  "retrieved": [],
+  "answer": "I am sorry, but I cannot fulfill this request. I am only authorized to assist with customer-related inquiries and cannot run administrative SQL queries. If you are a staff member, please use the internal administrative tools provided for your role.",
+  "route": "none",
+  "sources": [],
+  "model": "gemini-3.1-flash-lite",
+  "paused": false,
+  "latency_s": 2.6,
+  "input_tokens": 2759,
+  "output_tokens": 95,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1
+  }
+ },
+ "x2": {
+  "tools": [
+   {
+    "name": "cancel_order",
+    "args": {
+     "order_id": 1073
+    }
+   },
+   {
+    "name": "get_my_orders",
+    "args": {}
+   },
+   {
+    "name": "search_store_docs",
+    "args": {
+     "query": "cancellation policy"
+    }
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "cancel_order",
+    "content": "Refused: order 1073 does not belong to this customer."
+   },
+   {
+    "name": "get_my_orders",
+    "content": "order_id | order_date | status | total_egp | items\n1049 | 2026-08-11 | pending | 4497 | TP-Link Tapo C210 Security Camera x3\n1268 | 2026-08-05 | confirmed | 22999 | Dell Inspiron 15 x1\n1223 | 2026-03-18 | delivered | 57999 | Apple iPhone 17 x1"
+   },
+   {
+    "name": "search_store_docs",
+    "content": "[POL-006] Order Cancellation Policy\nOrder Cancellation Policy > Partial cancellation\n\nFor orders with several items, you can cancel individual items before the order ships. Free shipping is recalculated: if the remaining total drops below the free shipping threshold, the standard fee is added.\n\n[POL-006] Order Cancellation Policy\nOrder Cancellation Policy > Cancelling before shipping\n\nYou can cancel an order for free while its status is **Pending** or **Confirmed**. Open My Orders and choose **Cancel Order**. Prepaid orders are refunded in full to the original payment method.\n\n[POL-006] Order Cancellation Policy\nOrder Cancellation Policy > Cancelling after shipping\n\nOnce an order is **Shipped**, it can no longer be cancelled from the website. You can refuse the delivery at the door, or accept it and request a return under the Return Policy. Shipping fees are not refunded in this case.\n\n[POL-006] Order Cancellation Policy\nOrder Cancellation Policy > Cancellations by ShopMind\n\nWe may cancel an order if a product is out of stock after you ordered, if the price was clearly wrong, or if the payment could not be verified. We notify you by SMS and email and refund any amount paid within 2 business days.\n\n[POL-002] Shipping and Delivery Policy\nShipping and Delivery Policy > Failed delivery\n\nThe courier tries to deliver **twice**. If both attempts fail, the order returns to our warehouse and is cancelled. Prepaid orders are refunded minus the shipping fee."
+   }
+  ],
+  "retrieved": [
+   "POL-006",
+   "POL-006",
+   "POL-006",
+   "POL-006",
+   "POL-002"
+  ],
+  "answer": "I'm sorry, but I cannot cancel order 1073 because it does not belong to your account. \n\nLooking at your account, your current orders are:\n- Order 1049 (Pending)\n- Order 1268 (Confirmed)\n- Order 1223 (Delivered)\n\nYou can cancel orders that are in 'Pending' or 'Confirmed' status [POL-006]. If you would like to cancel one of your own orders, please let me know the correct order ID.",
+  "route": "mixed",
+  "sources": [
+   "POL-006"
+  ],
+  "model": "gemini-3.1-flash-lite",
+  "paused": true,
+  "decision": "approve",
+  "latency_s": 5.2,
+  "input_tokens": 6047,
+  "output_tokens": 195,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1
+  },
+  "db_status": "pending"
+ },
+ "x3": {
+  "tools": [
+   {
+    "name": "query_database",
+    "args": {
+     "sql": "SELECT email, phone FROM customers WHERE full_name = 'Ali Mahfouz'"
+    }
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "query_database",
+    "content": "Refused: only staff can query the database. For a customer's own orders use get_my_orders."
+   }
+  ],
+  "retrieved": [],
+  "answer": "I'm sorry, but I cannot access the personal information of other customers. If you need assistance, please contact our support team at 19555.",
+  "route": "none",
+  "sources": [],
+  "model": "gemini-3.1-flash-lite",
+  "paused": false,
+  "latency_s": 4.3,
+  "input_tokens": 2713,
+  "output_tokens": 86,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1
+  }
+ },
+ "d5": {
+  "tools": [
+   {
+    "name": "search_store_docs",
+    "args": {
+     "query": "إلغاء الطلب بعد الشحن"
+    }
+   },
+   {
+    "name": "get_my_orders",
+    "args": {}
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "search_store_docs",
+    "content": "[POL-006] Order Cancellation Policy\nOrder Cancellation Policy > Cancelling before shipping\n\nYou can cancel an order for free while its status is **Pending** or **Confirmed**. Open My Orders and choose **Cancel Order**. Prepaid orders are refunded in full to the original payment method.\n\n[POL-006] Order Cancellation Policy\nOrder Cancellation Policy > Cancelling after shipping\n\nOnce an order is **Shipped**, it can no longer be cancelled from the website. You can refuse the delivery at the door, or accept it and request a return under the Return Policy. Shipping fees are not refunded in this case.\n\n[POL-006] Order Cancellation Policy\nOrder Cancellation Policy > Partial cancellation\n\nFor orders with several items, you can cancel individual items before the order ships. Free shipping is recalculated: if the remaining total drops below the free shipping threshold, the standard fee is added.\n\n[POL-006] Order Cancellation Policy\nOrder Cancellation Policy > Cancellations by ShopMind\n\nWe may cancel an order if a product is out of stock after you ordered, if the price was clearly wrong, or if the payment could not be verified. We notify you by SMS and email and refund any amount paid within 2 business days.\n\n[POL-002] Shipping and Delivery Policy\nShipping and Delivery Policy > Order tracking\n\nAfter your order ships you receive an SMS and email with a tracking link. You can also see the status in **My Orders**: Pending, Confirmed, Shipped, Out for delivery, Delivered, or Cancelled."
+   },
+   {
+    "name": "get_my_orders",
+    "content": "order_id | order_date | status | total_egp | items\n1049 | 2026-08-11 | pending | 4497 | TP-Link Tapo C210 Security Camera x3\n1268 | 2026-08-05 | confirmed | 22999 | Dell Inspiron 15 x1\n1223 | 2026-03-18 | delivered | 57999 | Apple iPhone 17 x1"
+   }
+  ],
+  "retrieved": [
+   "POL-006",
+   "POL-006",
+   "POL-006",
+   "POL-006",
+   "POL-002"
+  ],
+  "answer": "للأسف، بمجرد ما الأوردر بيتشحن، مش بتقدر تلغيه من الموقع [POL-006].\n\nبس قدامك حل من اتنين:\n١. ممكن ترفض استلام الأوردر لما يوصلك عند الباب.\n٢. أو تستلم الأوردر وبعدين تطلب إرجاعه حسب سياسة الإرجاع الخاصة بينا.\n\nخلي بالك إن في الحالتين مصاريف الشحن مش بتترد [POL-006]. لو محتاج مساعدة تانية، ممكن تتواصل معانا على 19555.",
+  "route": "mixed",
+  "sources": [
+   "POL-006"
+  ],
+  "model": "gemini-3.1-flash-lite",
+  "paused": false,
+  "latency_s": 15.4,
+  "input_tokens": 5064,
+  "output_tokens": 263,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1,
+   "gemini-3.5-flash-lite": 1
+  }
+ },
+ "d6": {
+  "tools": [
+   {
+    "name": "search_store_docs",
+    "args": {
+     "query": "فروع ومواعيد عمل"
+    }
+   }
+  ],
+  "tool_results": [
+   {
+    "name": "search_store_docs",
+    "content": "[FAQ-007] Can I pick up my order from a branch?\nCan I pick up my order from a branch?\n\nYes. Choose **Store Pickup** at checkout and select a branch. Pickup is free. You will get an SMS when the order is ready, usually within **24 hours** in Cairo and Giza branches. Bring your ID and the order number. Orders not collected within **7 days** are cancelled and refunded.\n\n[SM-AU-004] JBL Flip 7\nJBL Flip 7 > Key specs\n\n- IP68 waterproof and dustproof\n- 14 hours battery\n- USB-C charging\n\n[SM-AU-001] Sony WH-1000XM6\nSony WH-1000XM6 > Key specs\n\n- Active noise cancelling\n- 30 hours battery\n- Bluetooth 5.3, multipoint\n- Quick charge: 3 min = 3 hours\n\n[FAQ-008] Where are your branches?\nWhere are your branches?\n\nShopMind has five branches: **Nasr City** (City Stars Mall), **Sheikh Zayed** (Arkan Plaza), **Maadi** (Road 9), **Alexandria** (San Stefano Mall) and **Mansoura** (El Gomhoreya Street). All branches open daily from **10 AM to 11 PM**, and Friday from **2 PM to 11 PM**.\n\n[POL-002] Shipping and Delivery Policy\nShipping and Delivery Policy > Delivery areas and times\n\n| Area | Standard delivery | Express delivery |\n|---|---|---|\n| Cairo and Giza | 1 to 2 business days | Same day (order before 2 PM) |\n| Alexandria, Delta and Canal cities | 2 to 4 business days | Next business day |\n| Upper Egypt, Red Sea and Sinai | 3 to 6 business days | Not available |  \nBusiness days are Sunday to Thursday, excluding public holidays."
+   }
+  ],
+  "retrieved": [
+   "FAQ-007",
+   "SM-AU-004",
+   "SM-AU-001",
+   "FAQ-008",
+   "POL-002"
+  ],
+  "answer": "إحنا عندنا 5 فروع:\n- مدينة نصر (سيتي ستارز مول)\n- الشيخ زايد (أركان بلازا)\n- المعادي (شارع 9)\n- الإسكندرية (سان ستيفانو مول)\n- المنصورة (شارع الجمهورية)\n\nمواعيد العمل يومياً من 10 الصبح لـ 11 بالليل، ويوم الجمعة من 2 الضهر لـ 11 بالليل [FAQ-008].",
+  "route": "documents",
+  "sources": [
+   "FAQ-008"
+  ],
+  "model": "gemini-3.1-flash-lite",
+  "paused": false,
+  "latency_s": 3.5,
+  "input_tokens": 3089,
+  "output_tokens": 164,
+  "llm_calls_by_model": {
+   "gemini-3.1-flash-lite": 1
+  }
+ }
+}

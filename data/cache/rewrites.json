@@ -286,5 +286,23 @@
   "min_price": null,
   "max_price": null,
   "include_archived": false
+ },
+ "فروع ومواعيد عمل": {
+  "query": "store locations and working hours",
+  "doc_type": "faq",
+  "category": "store",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
+ },
+ "إلغاء الطلب بعد الشحن": {
+  "query": "cancel order after shipping",
+  "doc_type": "policy",
+  "category": "orders",
+  "brand": null,
+  "min_price": null,
+  "max_price": null,
+  "include_archived": false
  }
 }

@@ -1,8 +1,10 @@
 # Failure cases (Phase 5)
 
-Seven real failures found by the golden-set evaluation, what caused each one, and what we did.
-"Before" numbers are from [golden_eval.md](golden_eval.md) (24 questions, first run). "After" numbers
-are from [golden_eval_after_fixes.md](golden_eval_after_fixes.md) (7 questions re-run with the fixed agent).
+Eight real failures found by the golden-set evaluation, what caused each one, and what we did.
+"Before" numbers are from [golden_eval.md](golden_eval.md) (24 questions, first run). "After" numbers are from
+[golden_eval_v2.md](golden_eval_v2.md): **all 25 questions run again with the fixed agent**
+(25/25 correct, 25/25 grounded, 25/25 right language, median 5.2 s). An earlier partial re-run of 7 questions
+is kept in [golden_eval_after_fixes.md](golden_eval_after_fixes.md).
 
 Note on models: the main model's free quota was used up, so every golden question was answered by a
 fallback **lite** model. These failures therefore show the agent on its weakest models.
@@ -26,9 +28,14 @@ fallback **lite** model. These failures therefore show the agent on its weakest 
   because that pipeline searched with the customer's full question.
 - **Fix:** `search_store_docs` now also searches with the customer's own words and adds any new chunks.
   Offline test: the product page `SM-PH-005` is now returned.
-- **Result:** partly fixed. The answer now contains the right fact ("clearance items are final sale and cannot
-  be returned") but the lite model still opens with "Yes, you can return…", so the judge still marks it wrong.
-  **Open issue.** The remaining problem is the model's reasoning, not retrieval.
+- **Result of fix 1:** partly fixed. The answer now contained the right fact but the lite model still opened
+  with "Yes, you can return…", so the judge still marked it wrong. Retrieval was no longer the problem; the
+  model had to connect two documents (the product is clearance + clearance cannot be returned) and did not.
+- **Fix 2:** "clearance" is a metadata field we already store. `_clearance_note()` in `shopmind/tools.py` writes
+  the consequence next to the product in the tool result ("this product is a CLEARANCE item = final sale. It
+  CANNOT be returned…"). The prompt also says a product page's rule wins over the general policy, and that a
+  yes/no answer must start with the final answer.
+- **Result:** fixed. Full re-run: judged correct and grounded, same lite model.
 
 ## 3. Search loop: 10 searches for one question (u2)
 
@@ -65,13 +72,41 @@ fallback **lite** model. These failures therefore show the agent on its weakest 
 - **What happened:** the SQL questions took 3 to 6 s when a model answered at once, but many turns took 30 to 120 s.
 - **Cause:** every model call first tries the main model, waits for it to fail (quota or overload), retries,
   then moves down the fallback list. One turn has 2 to 4 model calls, so the waiting adds up.
-- **Fix:** not fixed. On a paid tier the first model answers and the waiting disappears. A code fix would be a
-  "circuit breaker": after a model fails, skip it for a few minutes instead of trying it on every call.
+- **Fix:** a "circuit breaker". `FallbackWithCooldown` in `shopmind/agent.py` replaces LangChain's
+  `ModelFallbackMiddleware`: a model that fails is skipped for 5 minutes instead of being tried on every call.
+- **Result:** full re-run on the same free tier: median **5.2 s** (was 28.4 s), p95 16.2 s (was 88.2 s),
+  max 18.1 s (was 122.4 s).
 
 ## 7. Free-tier quota stopped the run (d3)
 
 - **What happened:** question d3 failed with "503 model overloaded" on every model, so the first run has 24 of 25.
 - **Fix:** the evaluation saves each finished question and continues on the next run. d3 passed in the re-run.
+
+## 8. Arabic search query, then an invented answer (d6, found in the full re-run)
+
+- **What happened:** "فروعكم فين ومواعيدها ايه؟" The model searched three times **in Arabic** ("فروع ومواعيد عمل"),
+  found nothing about branches, and answered "we are an online store only and have no branches". Wrong, and invented.
+  In the first run the same model had written an English query and answered correctly: lite models are not consistent.
+- **Cause:** the embedding model is English-only. The tool description says "short English search query", but
+  that is only a request. The safety net from failure 2 did not help, because the customer's own words were Arabic too.
+- **Fix:** in `search_store_docs`, a query containing Arabic letters first goes through the Phase 2 query
+  rewriter (one cheap, cached model call that returns an English query). If the rewriter fails, the tool
+  replies "call again with the query translated to English".
+- **Result:** fixed. Re-run: one search, branches and hours correct, judged correct and grounded, 3.5 s.
+- **Lesson:** the same as failures 1, 2 and 4. Whatever must always hold goes in code, not in the prompt.
+
+## Two bugs in the evaluation itself (found in the full re-run)
+
+- The string check was case-sensitive: "**Liquid** damage" failed the check for "liquid". Now compared in lower case.
+- The judge marked "Hi Mona, 28 orders were cancelled" as not grounded, because "Mona" was not in the evidence.
+  The judge now gets a line "Asked by: Mona (staff)". After re-judging: grounded 25/25.
+
+## Still open
+
+- **u1 string check** still fails on a correct answer (failure 5). Kept on purpose as the example of why string checks need a judge.
+- **Extra tool calls.** In a few questions the lite model called tools it did not need (for example `get_my_orders`
+  for a loyalty-points question, or four stock checks for a headphones question). Answers were right, but it costs time and tokens.
+- **All 25 answers still came from lite models** (24 from `gemini-3.1-flash-lite`). The main model has not been measured on the golden set.
 
 ## Earlier failures (found in Phases 2 to 4, already fixed)
 

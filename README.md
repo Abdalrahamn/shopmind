@@ -25,8 +25,12 @@ This is a capstone project that applies *LangChain Essentials (v1)* and *Retriev
 - [x] **Phase 2: Retrieval** (BM25, semantic, hybrid + RRF, filtering, query rewriting, reranking): see [findings](reports/retrieval_findings.md)
 - [x] **Phase 3: Generation** (citations, "I don't know", model comparison): see [findings](reports/generation_findings.md)
 - [x] **Phase 4: Agent** (tools, MCP, memory, streaming, structured output, dynamic prompt, human-in-the-loop): see [findings](reports/agent_findings.md) and the [demo transcript](reports/agent_demo.md)
-- [x] **Phase 5: Evaluation and production** (golden set, Precision / Recall, LLM-as-judge, cost, latency, security): see [results](reports/golden_eval.md), [failure cases](reports/failure_cases.md), [security tests](reports/security_tests.md), [cost and latency](reports/production_notes.md)
-- [ ] **Phase 6: Deliverables** (architecture diagram, eval report, demo)
+- [x] **Phase 5: Evaluation and production** (golden set, Precision / Recall, LLM-as-judge, cost, latency, security): see [results](reports/golden_eval_v2.md), [failure cases](reports/failure_cases.md), [security tests](reports/security_tests.md), [cost and latency](reports/production_notes.md)
+- [ ] **Phase 6: Deliverables**
+  - [ ] 6.1 README with an architecture diagram
+  - [ ] 6.2 The four demo questions work end to end (re-run `scripts/demo_agent.py` with the final agent)
+  - [ ] 6.3 Evaluation report: one page with the comparison tables and the failure-case list
+  - [ ] 6.4 Decisions log: why this chunking, retrieval method and model
 
 ## Getting started
 
@@ -116,18 +120,21 @@ tools' code, not only in the prompt. Try it in the explorer's **Agent** tab (`st
 
 `scripts/eval_golden.py` runs 25 questions (documents, products and stock, SQL, orders, unanswerable, security)
 through the real agent and grades tool choice, retrieval, facts, safety, language, latency and tokens, plus an
-LLM judge. First run, 24 of 25 questions, answered by fallback lite models because the main model's free quota was used up:
+LLM judge. Both runs were answered by fallback lite models, because the main model's free quota was used up.
 
-| Metric | Result |
-|---|---|
-| Right tool chosen | 24/24 |
-| Correct (LLM judge) | 23/24 |
-| Grounded (LLM judge) | 23/24 |
-| Retrieval Recall / Precision | 0.95 / 0.63 |
-| Paused before changing data, database unchanged | 2/2, 2/2 |
-| Security questions with no data leak | 3/3 |
-| Replied in the user's language | 6/24 → 7/7 on re-run after the fix |
-| Latency | median 28.4 s (free-tier fallbacks; 3 to 6 s when the first model answers) |
+| Metric | First run (24 questions) | Full re-run after the fixes (25) |
+|---|---|---|
+| Right tool chosen | 24/24 | 25/25 |
+| Correct (LLM judge) | 23/24 | 25/25 |
+| Grounded (LLM judge) | 23/24 | 25/25 |
+| Retrieval Recall / Precision | 0.95 / 0.63 | 0.96 / 0.66 |
+| Paused before changing data, database unchanged | 2/2, 2/2 | 2/2, 2/2 |
+| Security questions with no data leak | 3/3 | 3/3 |
+| Replied in the user's language | 6/24 | 25/25 |
+| Latency, median | 28.4 s | 5.2 s |
 
-The evaluation led to three fixes in the agent (language set in code, a cap on searches, a search safety net).
-One failure is still open. All seven are written up in [reports/failure_cases.md](reports/failure_cases.md).
+The evaluation led to six fixes in the agent: language set in code, a cap on searches, a search safety net,
+a clearance note in search results, Arabic queries rewritten to English, and a model fallback with a cooldown.
+All eight failures are written up in [reports/failure_cases.md](reports/failure_cases.md). Security: 14/14 direct
+attacks on the tools refused ([report](reports/security_tests.md)) and a prompt injection hidden inside a document
+ignored in 2/2 questions ([report](reports/security_doc_injection.md)).

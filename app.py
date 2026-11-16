@@ -355,8 +355,9 @@ with tab_gen_eval:
 
 # ---------------------------------------------------------------- Golden eval (Phase 5)
 with tab_golden:
-    names = {"Golden set results": "golden_eval.md", "Failure cases": "failure_cases.md",
-             "Security tests": "security_tests.md", "Cost, latency and tracing": "production_notes.md"}
+    names = {"Results after fixes (25/25)": "golden_eval_v2.md", "First run": "golden_eval.md",
+             "Failure cases": "failure_cases.md", "Security tests": "security_tests.md",
+             "Injection in a document": "security_doc_injection.md", "Cost, latency and tracing": "production_notes.md"}
     for view, name in zip(st.tabs(list(names)), names.values()):
         with view:
             path = ROOT / "reports" / name

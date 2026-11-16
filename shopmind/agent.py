@@ -21,15 +21,17 @@ from __future__ import annotations
 
 import re
 import sys
+import time
 from typing import Literal
 
 from langchain.agents import create_agent
-from langchain.agents.middleware import (HumanInTheLoopMiddleware, ModelFallbackMiddleware, ModelRequest,
+from langchain.agents.middleware import (AgentMiddleware, HumanInTheLoopMiddleware, ModelRequest,
                                          ToolCallLimitMiddleware, dynamic_prompt)
 from langchain.agents.structured_output import ToolStrategy
 from langchain.chat_models import init_chat_model
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.errors import GraphBubbleUp
 from langgraph.types import Command
 from pydantic import BaseModel, Field
 
@@ -49,6 +51,9 @@ How to work:
 - Search queries: keep the exact product names and key words from the question (for example
   "Pixel 10a return", not just "return policy"). A question about a specific product needs that product's page.
 - Search at most three times per question. If the answer is still missing, stop and say you do not know.
+- A rule on a product's own page (for example a clearance item is final sale) wins over the general policy.
+- For a yes/no question, decide the final answer first and start with it. Never open with "Yes" and
+  then add an exception that makes the real answer "No".
 - Be short and friendly.
 """
 
@@ -99,6 +104,53 @@ def _model(name: str):
     return init_chat_model(f"google_genai:{name}", temperature=0, max_retries=1, timeout=60)
 
 
+class FallbackWithCooldown(AgentMiddleware):
+    """Model fallback with a "circuit breaker".
+
+    LangChain's ModelFallbackMiddleware tries the main model first on EVERY model call. When the main
+    model's free quota is used up, each call waits for it to fail before a fallback answers, and one
+    turn has 2 to 4 model calls: the Phase 5 evaluation measured a 28 s median turn because of this.
+
+    Here a model that fails is skipped for COOLDOWN seconds, so the wait is paid once, not on every call.
+    After the cooldown it is tried again (the quota may be back).
+    """
+    COOLDOWN = 300  # seconds
+
+    def __init__(self, *models):
+        super().__init__()
+        self.models = list(models)   # in order of preference; the first is the main model
+        self.skip_until = {}         # position in the list -> time when we may try that model again
+
+    def _order(self):
+        now = time.monotonic()
+        ready = [i for i in range(len(self.models)) if self.skip_until.get(i, 0) <= now]
+        return ready or list(range(len(self.models)))  # all cooling down: try them all anyway
+
+    async def awrap_model_call(self, request, handler):
+        last_error = None
+        for i in self._order():
+            try:
+                return await handler(request.override(model=self.models[i]))
+            except GraphBubbleUp:      # not an error: this is how the agent pauses for human approval
+                raise
+            except Exception as e:     # quota, overload, timeout: remember it and move on
+                self.skip_until[i] = time.monotonic() + self.COOLDOWN
+                last_error = e
+        raise last_error
+
+    def wrap_model_call(self, request, handler):
+        last_error = None
+        for i in self._order():
+            try:
+                return handler(request.override(model=self.models[i]))
+            except GraphBubbleUp:
+                raise
+            except Exception as e:
+                self.skip_until[i] = time.monotonic() + self.COOLDOWN
+                last_error = e
+        raise last_error
+
+
 async def build_agent(checkpointer=None):
     """Create the agent. Async because the MCP tools are fetched from the server first."""
     mcp_client = MultiServerMCPClient({
@@ -115,8 +167,9 @@ async def build_agent(checkpointer=None):
         checkpointer=checkpointer or InMemorySaver(),  # memory: saves the conversation per thread_id
         middleware=[
             role_prompt,
-            # The free Gemini tier allows ~20 requests per model per day: move to the next model on failure.
-            ModelFallbackMiddleware(*[_model(m) for m in AGENT_FALLBACKS]),
+            # The free Gemini tier allows ~20 requests per model per day: move to the next model on failure,
+            # and stop retrying a failed model for a few minutes.
+            FallbackWithCooldown(*[_model(m) for m in [AGENT_MODEL, *AGENT_FALLBACKS]]),
             # Stop search loops: the evaluation caught 10 searches for one unanswerable question.
             ToolCallLimitMiddleware(tool_name="search_store_docs", run_limit=3),
             # Pause before cancel_order runs and wait for a human decision.
