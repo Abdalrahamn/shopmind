@@ -16,7 +16,7 @@ import json
 import time
 from dataclasses import asdict, dataclass, field
 
-from langchain.chat_models import init_chat_model
+from shopmind.llm import chat_model
 from pydantic import BaseModel, Field
 
 from shopmind.config import CACHE_DIR, GEMINI_MODEL
@@ -72,7 +72,7 @@ class Generator:
         self.retriever = retriever
         self.model = model
         self.temperature = temperature
-        llm = init_chat_model(f"google_genai:{model}", temperature=temperature, max_retries=1, timeout=60)
+        llm = chat_model(model, temperature=temperature)
         # include_raw gives us the raw message too, which carries the token counts.
         self.chain = llm.with_structured_output(GroundedAnswer, include_raw=True)
         self.cache_file = CACHE_DIR / "answers.json"

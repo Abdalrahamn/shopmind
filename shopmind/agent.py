@@ -28,7 +28,6 @@ from langchain.agents import create_agent
 from langchain.agents.middleware import (AgentMiddleware, HumanInTheLoopMiddleware, ModelRequest,
                                          ToolCallLimitMiddleware, dynamic_prompt)
 from langchain.agents.structured_output import ToolStrategy
-from langchain.chat_models import init_chat_model
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.errors import GraphBubbleUp
@@ -36,6 +35,7 @@ from langgraph.types import Command
 from pydantic import BaseModel, Field
 
 from shopmind.config import AGENT_FALLBACKS, AGENT_MODEL, ROOT
+from shopmind.llm import chat_model
 from shopmind.tools import LOCAL_TOOLS, UserContext
 
 BASE_PROMPT = """You are ShopMind, the assistant of ShopMind Electronics, an online electronics store in Egypt.
@@ -101,7 +101,7 @@ class SupportReply(BaseModel):
 
 
 def _model(name: str):
-    return init_chat_model(f"google_genai:{name}", temperature=0, max_retries=1, timeout=60)
+    return chat_model(name)
 
 
 class FallbackWithCooldown(AgentMiddleware):

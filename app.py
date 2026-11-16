@@ -13,7 +13,7 @@ from contextlib import closing
 
 import pandas as pd
 import streamlit as st
-from shopmind.config import DB_PATH, DOCS_DIR, EMBEDDING_MODEL, GEMINI_MODEL, ROOT
+from shopmind.config import CHAT_MODEL, DB_PATH, DOCS_DIR, EMBEDDING_MODEL, LLM_PROVIDER, ROOT
 from shopmind.documents import chunk_documents, load_documents
 from shopmind.agent import build_agent, run_turn
 from shopmind.generation import Generator
@@ -190,7 +190,7 @@ with tab_ask:
             m1.metric("Citations", ", ".join(res.citations) or "none")
             m2.metric("Latency", "cached" if res.cached else f"{res.latency_s} s")
             m3.metric("Tokens in / out", f"{res.input_tokens} / {res.output_tokens}")
-            m4.metric("Model", res.model.replace("gemini-", ""))
+            m4.metric("Model", res.model.replace("gemini-", "").replace("deepseek/", ""))
             if res.dropped_citations:
                 st.error(f"Removed citations that were not in the sources: {res.dropped_citations}")
             st.markdown("**Sources shown to the model**")
@@ -205,10 +205,11 @@ with tab_setup:
     st.subheader("Phase 0: are all the tools working?")
     cols = st.columns(4)
 
-    if os.getenv("GOOGLE_API_KEY"):
-        cols[0].success(f"**Gemini**\n\nkey found · `{GEMINI_MODEL}`")
+    key_name = "OPENROUTER_API_KEY" if LLM_PROVIDER == "openrouter" else "GOOGLE_API_KEY"
+    if os.getenv(key_name):
+        cols[0].success(f"**LLM: {LLM_PROVIDER}**\n\nkey found · `{CHAT_MODEL}`")
     else:
-        cols[0].error("**Gemini**\n\nGOOGLE_API_KEY missing")
+        cols[0].error(f"**LLM: {LLM_PROVIDER}**\n\n{key_name} missing")
 
     if os.getenv("LANGSMITH_API_KEY"):
         cols[1].success(f"**LangSmith**\n\nproject `{os.getenv('LANGSMITH_PROJECT')}`")
@@ -223,10 +224,10 @@ with tab_setup:
 
     cols[3].success(f"**Embeddings**\n\n`{EMBEDDING_MODEL.split('/')[-1]}` · 384 dims")
 
-    if st.button("Send a test message to Gemini"):
-        from langchain.chat_models import init_chat_model
-        with st.spinner("Asking Gemini..."):
-            reply = init_chat_model(f"google_genai:{GEMINI_MODEL}").invoke("Say hello in Egyptian Arabic in one short sentence")
+    if st.button("Send a test message to the model"):
+        from shopmind.llm import chat_model
+        with st.spinner(f"Asking {CHAT_MODEL}..."):
+            reply = chat_model(CHAT_MODEL).invoke("Say hello in Egyptian Arabic in one short sentence")
         st.info(reply.text)
         st.caption("This call is now visible in LangSmith → project shopmind.")
 
@@ -355,7 +356,7 @@ with tab_gen_eval:
 
 # ---------------------------------------------------------------- Golden eval (Phase 5)
 with tab_golden:
-    names = {"Results after fixes (25/25)": "golden_eval_v2.md", "First run": "golden_eval.md",
+    names = {"DeepSeek run": "golden_eval_deepseek.md", "Gemini after fixes": "golden_eval_v2.md", "First run": "golden_eval.md",
              "Failure cases": "failure_cases.md", "Security tests": "security_tests.md",
              "Injection in a document": "security_doc_injection.md", "Cost, latency and tracing": "production_notes.md"}
     for view, name in zip(st.tabs(list(names)), names.values()):

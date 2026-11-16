@@ -13,7 +13,7 @@ from __future__ import annotations
 import json
 from typing import Literal
 
-from langchain.chat_models import init_chat_model
+from shopmind.llm import chat_model
 from pydantic import BaseModel, Field
 
 from shopmind.config import CACHE_DIR, REWRITE_FALLBACKS, REWRITE_MODEL
@@ -78,7 +78,7 @@ class QueryRewriter:
 
     def __init__(self, models: list[str] | None = None):
         models = models or [REWRITE_MODEL, *REWRITE_FALLBACKS]
-        chains = [init_chat_model(f"google_genai:{m}", temperature=0, max_retries=0, timeout=30)
+        chains = [chat_model(m, max_retries=0, timeout=30)
                   .with_structured_output(SearchPlan) for m in models]
         self.chain = chains[0].with_fallbacks(chains[1:])
         self.cache_file = CACHE_DIR / "rewrites.json"

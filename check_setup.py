@@ -10,12 +10,11 @@ def check(name, fn):
     except Exception as e:
         print(f"[FAIL] {name}: {type(e).__name__}: {str(e)[:200]}")
 
-def gemini():
-    if not os.getenv("GOOGLE_API_KEY"):
-        raise RuntimeError("GOOGLE_API_KEY is empty in .env")
-    from langchain.chat_models import init_chat_model
-    llm = init_chat_model(f"google_genai:{os.getenv('GEMINI_MODEL', 'gemini-3.5-flash')}")
-    return llm.invoke("Say hello in one word").text.strip()
+def llm():
+    from shopmind.config import CHAT_MODEL, LLM_PROVIDER
+    from shopmind.llm import chat_model
+    reply = chat_model(CHAT_MODEL).invoke("Say hello in one word").text.strip()
+    return f"{LLM_PROVIDER} · {CHAT_MODEL} · {reply}"
 
 def langsmith():
     if not os.getenv("LANGSMITH_API_KEY"):
@@ -35,7 +34,7 @@ def embeddings():
     model = SentenceTransformer("all-MiniLM-L6-v2")
     return f"vector size={len(model.encode('hello'))}"
 
-check("Gemini", gemini)
+check("LLM", llm)
 check("LangSmith", langsmith)
 check("Weaviate", weaviate_ready)
 check("Embeddings", embeddings)

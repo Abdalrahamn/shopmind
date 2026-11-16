@@ -110,3 +110,4 @@ weaviate-client==4.24.1
 websockets==17.4
 xxhash==4.0.2
 zstandard==0.25.0
+langchain-openai

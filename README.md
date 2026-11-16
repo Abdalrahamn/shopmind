@@ -11,7 +11,7 @@ This is a capstone project that applies *LangChain Essentials (v1)* and *Retriev
 
 | Part | Tool |
 |---|---|
-| LLM | Gemini API (free tier) via `langchain-google-genai` |
+| LLM | DeepSeek via OpenRouter (`langchain-openai`), or the Gemini API free tier (`langchain-google-genai`); chosen by `LLM_PROVIDER` |
 | Agent framework | LangChain v1 / LangGraph |
 | Vector database | Weaviate (Docker) |
 | Embeddings | sentence-transformers |
@@ -38,7 +38,7 @@ This is a capstone project that applies *LangChain Essentials (v1)* and *Retriev
 python3 -m venv .venv && source .venv/bin/activate
 pip install torch --index-url https://download.pytorch.org/whl/cpu
 pip install -r requirements.txt
-cp .env.example .env        # then add your GOOGLE_API_KEY and LANGSMITH_API_KEY
+cp .env.example .env        # then add your OPENROUTER_API_KEY (or GOOGLE_API_KEY) and LANGSMITH_API_KEY
 docker compose up -d        # starts Weaviate on localhost:8080
 python check_setup.py       # all four checks should print [OK]
 python scripts/seed_db.py   # builds data/shop.db
@@ -132,6 +132,12 @@ LLM judge. Both runs were answered by fallback lite models, because the main mod
 | Security questions with no data leak | 3/3 | 3/3 |
 | Replied in the user's language | 6/24 | 25/25 |
 | Latency, median | 28.4 s | 5.2 s |
+
+**Model switch.** The project now runs on **DeepSeek through OpenRouter** (`deepseek/deepseek-v4.1-flash`; set
+`LLM_PROVIDER=gemini` in `.env` to go back). `shopmind/llm.py` is the one place that creates chat models. The same
+25 questions on DeepSeek ([report](reports/golden_eval_deepseek.md)): right tool 25/25, correct 25/25, grounded 21/25
+(the judge, also DeepSeek, is stricter about small inferences), language 25/25, median 3.5 s, max 7.0 s,
+3,919 input / 305 output tokens per question, no daily limit.
 
 The evaluation led to six fixes in the agent: language set in code, a cap on searches, a search safety net,
 a clearance note in search results, Arabic queries rewritten to English, and a model fallback with a cooldown.

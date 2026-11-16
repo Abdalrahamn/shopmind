@@ -29,12 +29,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from langchain.chat_models import init_chat_model  # noqa: E402
+from shopmind.llm import chat_model  # noqa: E402
 from langchain_core.callbacks import UsageMetadataCallbackHandler  # noqa: E402
 from pydantic import BaseModel, Field  # noqa: E402
 
 from shopmind.agent import build_agent, run_turn  # noqa: E402
-from shopmind.config import AGENT_FALLBACKS, AGENT_MODEL, CACHE_DIR, DB_PATH  # noqa: E402
+from shopmind.config import AGENT_FALLBACKS, AGENT_MODEL, CACHE_DIR, DB_PATH, LLM_PROVIDER  # noqa: E402
 from shopmind.tools import UserContext, get_retriever  # noqa: E402
 
 GOLDEN = json.loads((ROOT / "data" / "eval" / "golden_set.json").read_text(encoding="utf-8"))
@@ -58,7 +58,14 @@ if "--full-rerun" in sys.argv:
     JUDGE_FILE = CACHE_DIR / "golden_judge_v2.json"
     REPORT_FILE = ROOT / "reports" / "golden_eval_v2.md"
     TITLE = "Golden set: full re-run with the fixed agent"
-PAUSE = 8          # seconds between questions (requests-per-minute limit)
+# --run NAME  a separate full run under its own name, e.g. "--run deepseek" after changing the model.
+if "--run" in sys.argv:
+    _name = sys.argv[sys.argv.index("--run") + 1]
+    RUNS_FILE = CACHE_DIR / f"golden_runs_{_name}.json"
+    JUDGE_FILE = CACHE_DIR / f"golden_judge_{_name}.json"
+    REPORT_FILE = ROOT / "reports" / f"golden_eval_{_name}.md"
+    TITLE = f"Golden set: full run with {AGENT_MODEL}"
+PAUSE = 2 if LLM_PROVIDER == "openrouter" else 8          # seconds between questions (requests-per-minute limit)
 JUDGE_BATCH = 5    # answers per judge request, to save quota
 CONTEXTS = {"customer": UserContext("customer", "Khaled Zaki", 20), "staff": UserContext("staff", "Mona (store manager)")}
 DOC_ID = re.compile(r"\[((?:POL|FAQ|SM)-[A-Z0-9-]+)\]")
@@ -162,6 +169,9 @@ saw (tool results), and the assistant's answer. Give two independent marks:
   The answer may be in Arabic or English; judge the meaning, not the language.
 - grounded: is every fact in the answer supported by the evidence? Anything not in the evidence = false.
   Greeting the user by the name given in "Asked by" is not an invented fact.
+  Not invented either: the support phone number 19555 (it is in the assistant's instructions), and the
+  assistant describing its own limits ("I cannot share other customers' data", "I cannot run SQL for you").
+  Mark grounded = false only for a store fact (price, date, rule, stock, product detail) that the evidence does not contain.
 
 Return one verdict per item, using the same ids.
 
@@ -173,7 +183,7 @@ def judge_missing(runs: dict) -> None:
     todo = [q for q in GOLDEN if q["id"] in runs and q["id"] not in verdicts]
     if not todo:
         return
-    models = [init_chat_model(f"google_genai:{m}", temperature=0, max_retries=1, timeout=90)
+    models = [chat_model(m, timeout=90)
               .with_structured_output(Verdicts) for m in [AGENT_MODEL, *AGENT_FALLBACKS]]
     judge = models[0].with_fallbacks(models[1:])
     for i in range(0, len(todo), JUDGE_BATCH):
@@ -181,7 +191,7 @@ def judge_missing(runs: dict) -> None:
         items = []
         for q in batch:
             r = runs[q["id"]]
-            evidence = "\n".join(f"({t['name']}) {t['content'][:1500]}" for t in r["tool_results"]) or "(no tool was called)"
+            evidence = "\n".join(f"({t['name']}) {t['content'][:2500]}" for t in r["tool_results"]) or "(no tool was called)"
             who = CONTEXTS[q["role"]]   # the judge marked "Hi Mona" as invented: tell it who is asking
             items.append(f"### id: {q['id']}\nAsked by: {who.name} ({who.role})\n"
                          f"Question: {q['question']}\nReference: {q['reference']}\n"
@@ -202,7 +212,8 @@ def judge_missing(runs: dict) -> None:
 # ------------------------------------------------------------------ 3. grade and report
 def grade(q: dict, r: dict) -> dict:
     called = [t["name"] for t in r["tools"]]
-    text = r["answer"].replace(",", "").lower()   # "Liquid" must match "liquid": found in the full re-run
+    # Arabic answers may write numbers as ١٠ instead of 10: make them the same before comparing.
+    text = r["answer"].translate(str.maketrans("٠١٢٣٤٥٦٧٨٩", "0123456789")).replace(",", "").lower()   # "Liquid" must match "liquid": found in the full re-run
     g = {"tool_ok": set(q["expected_tools"]) <= set(called)}
     g["facts_ok"] = (all(f.replace(",", "").lower() in text for f in q.get("must_include", []))
                      and not any(f.replace(",", "").lower() in text for f in q.get("must_not_include", [])))
@@ -284,7 +295,7 @@ def report() -> None:
         r, g, v = runs[q["id"]], grades[q["id"]], verdicts.get(q["id"])
         L.append(f"| {q['id']} | {q['type']} | {', '.join(t['name'] for t in r['tools']) or 'none'} | {mark(g['tool_ok'])} | "
                  f"{mark(g['facts_ok'])} | {mark(v['correct']) if v else '-'} | {mark(v['grounded']) if v else '-'} | "
-                 f"{mark(g['lang_ok'])} | {r['latency_s']} s | {r['model'].replace('gemini-', '')} |")
+                 f"{mark(g['lang_ok'])} | {r['latency_s']} s | {r['model'].replace('gemini-', '').replace('deepseek/', '')} |")
 
     L += ["", "## Problems", ""]
     problems = 0
