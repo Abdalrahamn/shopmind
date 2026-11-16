@@ -1,4 +1,4 @@
-"""Phase 0 smoke test: checks Gemini, LangSmith config, and Weaviate."""
+"""Phase 0 smoke test: checks the LLM (DeepSeek or Gemini), LangSmith config, Weaviate and the embedding model."""
 import os
 from dotenv import load_dotenv
 
