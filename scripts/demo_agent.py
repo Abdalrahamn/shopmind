@@ -1,4 +1,4 @@
-"""Phase 4 demo: the agent answers the project's demo questions, streamed step by step.
+"""Demo (Phases 4 and 6): the agent answers the project's four acceptance questions, streamed step by step.
 
 Each scene shows one skill:
   1. documents (RAG)            a policy question
@@ -11,7 +11,7 @@ Each scene shows one skill:
 Finished scenes are saved in data/cache/agent_demo_scenes.json and reused on the next run.
 
 The transcript is saved to reports/agent_demo.md.
-Uses about 13 Gemini requests. Run: python scripts/demo_agent.py
+Uses about 13 model requests. Run: python scripts/demo_agent.py   (add --fresh to ignore saved scenes)
 """
 import asyncio
 import json
@@ -24,11 +24,13 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from shopmind.agent import build_agent, run_turn  # noqa: E402
-from shopmind.config import DB_PATH  # noqa: E402
+from shopmind.config import AGENT_MODEL, DB_PATH, LLM_PROVIDER  # noqa: E402
 from shopmind.tools import UserContext, get_retriever  # noqa: E402
 
 SCENES_FILE = ROOT / "data" / "cache" / "agent_demo_scenes.json"
-PAUSE = 12  # seconds between scenes, to stay under the free tier's requests-per-minute limit
+PAUSE = 2 if LLM_PROVIDER == "openrouter" else 12  # seconds between scenes (the free Gemini tier has a per-minute limit)
+if "--fresh" in sys.argv and SCENES_FILE.exists():
+    SCENES_FILE.unlink()
 lines: list[str] = []
 
 
@@ -75,7 +77,7 @@ async def scene(key: str, title: str, play) -> None:
     except Exception as e:
         del lines[before:]
         print(f"Scene {key} failed: {type(e).__name__}: {str(e)[:150]}")
-        lines.append(f"\n## {title}\n\n*Not run yet: Gemini's free daily limit was reached. Run the demo again later.*")
+        lines.append(f"\n## {title}\n\n*Not run: the model call failed. Run the demo again.*")
         return
     done[key] = lines[before:]
     SCENES_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -93,19 +95,19 @@ async def main() -> None:
     staff = UserContext("staff", "Mona (store manager)")
 
     agent = await build_agent()
-    log("# Agent demo (Phase 4)\n")
-    log("Every step below was streamed live while the agent worked.")
+    log("# Agent demo: the four acceptance questions (Phase 6)\n")
+    log(f"Model: `{AGENT_MODEL}` ({LLM_PROVIDER}). Every step below was streamed live while the agent worked.")
 
     async def s1():
-        q = "how long do I have to return something I opened?"
+        q = "What is the return policy?"
         await turn(agent, q, "t1", customer, q)
 
     async def s2():
-        q = "who are our top 5 customers by total spending?"
+        q = "Who are the top 3 customers by spend?"
         await turn(agent, q, "t2", staff, q)
 
     async def s3():
-        q = "who are your top 5 customers by total spending?"
+        q = "Who are the top 3 customers by spend?"
         await turn(agent, q, "t3", customer, q)
 
     async def s45():
@@ -116,7 +118,7 @@ async def main() -> None:
         await turn(agent, "وضمانه قد ايه؟", "t4", customer, "وضمانه قد ايه؟")
 
     async def s6():
-        q = f"please cancel my order {order_id}"
+        q = f"Cancel order #{order_id}."
         paused = await turn(agent, q, "t5", customer, q)
         if not paused:
             raise RuntimeError("the agent did not pause for approval")
@@ -128,11 +130,11 @@ async def main() -> None:
         con.close()
         log(f"\nAfter approval, order {order_id} is `{after}` in the database.")
 
-    await scene("1", "1. A policy question → documents (RAG)", s1)
-    await scene("2", "2. A numbers question from staff → database (SQL)", s2)
-    await scene("3", "3. The same question from a customer → refused (dynamic prompt + code check)", s3)
-    await scene("4", "4. Product advice with a budget and stock → documents + filter + MCP, then memory", s45)
-    await scene("6", "5. Cancel an order → human-in-the-loop", s6)
+    await scene("1", "Demo question 1: a policy question → documents (RAG)", s1)
+    await scene("2", "Demo question 2: a numbers question from staff → database (SQL)", s2)
+    await scene("3", "Extra: the same question from a customer → refused (role check)", s3)
+    await scene("4", "Demo question 3: a product under a budget that is in stock → documents + metadata filter + MCP, then memory", s45)
+    await scene("6", "Demo question 4: cancel an order → human-in-the-loop", s6)
 
     (ROOT / "reports" / "agent_demo.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     get_retriever().close()

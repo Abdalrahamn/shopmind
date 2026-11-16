@@ -5,7 +5,56 @@ An AI assistant for an e-commerce store. It answers questions from two sources a
 - **Store documents** (FAQ, policies, product descriptions) through a RAG pipeline
 - **SQL database** (orders, customers, products, stock)
 
-This is a capstone project that applies *LangChain Essentials (v1)* and *Retrieval Augmented Generation* (DeepLearning.AI). It uses only free tools.
+This is a capstone project that applies *LangChain Essentials (v1)* and *Retrieval Augmented Generation* (DeepLearning.AI).
+Everything runs on free tools, except the LLM: DeepSeek through OpenRouter costs about 0.02 USD for the whole
+25-question evaluation (the free Gemini tier still works with `LLM_PROVIDER=gemini`).
+
+**Project status: all phases done.** Start with the [evaluation report](reports/evaluation_report.md),
+the [decisions log](reports/decisions.md) and the [demo transcript](reports/agent_demo.md).
+
+## Architecture
+
+```mermaid
+flowchart TD
+    U["User: customer or staff<br/>(Streamlit explorer or a script)"] --> A
+
+    subgraph AGENT["Agent: LangChain create_agent (shopmind/agent.py)"]
+        A["LLM: DeepSeek via OpenRouter<br/>fallback model with cooldown"]
+        P["Dynamic prompt<br/>role rules + reply language set in code"]
+        M["Memory<br/>checkpointer, one thread per conversation"]
+        P -.-> A
+        M -.-> A
+    end
+
+    A -->|"policies, FAQ, product advice"| T1["search_store_docs<br/>max 3 searches per turn"]
+    A -->|"numbers and records, staff only"| T2["query_database<br/>one read-only SELECT"]
+    A -->|"my orders"| T3["get_my_orders"]
+    A -->|"is it in stock?"| T4["check_stock<br/>MCP server"]
+    A -->|"cancel an order"| H{"Human approval<br/>(human-in-the-loop)"}
+    H -->|approved| T5["cancel_order<br/>ownership + status check"]
+
+    subgraph RAG["RAG pipeline (shopmind/retrieval.py)"]
+        R1["Arabic query?<br/>rewrite to English"] --> R2["Hybrid search<br/>BM25 + semantic, merged with RRF"]
+        R2 --> R3["Metadata filters<br/>type, category, price, archived hidden"]
+    end
+    T1 --> R1
+    R3 --> W[("Weaviate<br/>88 chunks + embeddings")]
+
+    T2 --> DB[("SQLite shop.db<br/>customers, products, orders")]
+    T3 --> DB
+    T4 --> DB
+    T5 --> DB
+
+    A --> O["Structured reply<br/>answer + sources + route"]
+    O --> U
+
+    D["40 Markdown documents"] -->|"scripts/ingest.py<br/>chunk 800/120, embed with MiniLM"| W
+    A -.->|"every model and tool call"| L["LangSmith tracing"]
+```
+
+How to read it: the agent reads the question and picks a tool. Document questions go through the RAG pipeline
+to Weaviate; numbers go to SQLite; stock goes through an MCP server; cancelling an order stops and waits for a
+person. The offline part (bottom) is done once: documents are split into chunks, turned into vectors and stored.
 
 ## Stack
 
@@ -26,11 +75,13 @@ This is a capstone project that applies *LangChain Essentials (v1)* and *Retriev
 - [x] **Phase 3: Generation** (citations, "I don't know", model comparison): see [findings](reports/generation_findings.md)
 - [x] **Phase 4: Agent** (tools, MCP, memory, streaming, structured output, dynamic prompt, human-in-the-loop): see [findings](reports/agent_findings.md) and the [demo transcript](reports/agent_demo.md)
 - [x] **Phase 5: Evaluation and production** (golden set, Precision / Recall, LLM-as-judge, cost, latency, security): see [results](reports/golden_eval_v2.md), [failure cases](reports/failure_cases.md), [security tests](reports/security_tests.md), [cost and latency](reports/production_notes.md)
-- [ ] **Phase 6: Deliverables**
-  - [ ] 6.1 README with an architecture diagram
-  - [ ] 6.2 The four demo questions work end to end (re-run `scripts/demo_agent.py` with the final agent)
-  - [ ] 6.3 Evaluation report: one page with the comparison tables and the failure-case list
-  - [ ] 6.4 Decisions log: why this chunking, retrieval method and model
+- [x] **Phase 6: Deliverables**
+  - [x] 6.1 README with an architecture diagram (above)
+  - [x] 6.2 The four demo questions work end to end: [transcript](reports/agent_demo.md)
+  - [x] 6.3 [Evaluation report](reports/evaluation_report.md): comparison tables and the failure-case list
+  - [x] 6.4 [Decisions log](reports/decisions.md): why this chunking, retrieval method and model
+
+Backlog (not started): improve the explorer UI.
 
 ## Getting started
 
@@ -144,3 +195,21 @@ a clearance note in search results, Arabic queries rewritten to English, and a m
 All eight failures are written up in [reports/failure_cases.md](reports/failure_cases.md). Security: 14/14 direct
 attacks on the tools refused ([report](reports/security_tests.md)) and a prompt injection hidden inside a document
 ignored in 2/2 questions ([report](reports/security_doc_injection.md)).
+
+## Deliverables (Phase 6)
+
+| Deliverable | Where |
+|---|---|
+| Architecture diagram | [top of this README](#architecture) |
+| The four demo questions, end to end | [reports/agent_demo.md](reports/agent_demo.md), reproduce with `python scripts/demo_agent.py --fresh` |
+| Evaluation report | [reports/evaluation_report.md](reports/evaluation_report.md) |
+| Decisions log | [reports/decisions.md](reports/decisions.md) |
+
+| Demo question | Route | Result |
+|---|---|---|
+| "What is the return policy?" | RAG | Answered from `[POL-001]` with citations |
+| "Who are the top 3 customers by spend?" | SQL | Three customers with their totals |
+| "A phone under 15,000 EGP that is in stock" (asked in Arabic) | RAG + price filter + MCP | Redmi Note 15 Pro, 13,999 EGP, 18 in stock |
+| "Cancel order #1049." | Human-in-the-loop | Paused; cancelled only after approval |
+
+The demo really cancels the order in `data/shop.db`; run `python scripts/seed_db.py` afterwards to reset it.

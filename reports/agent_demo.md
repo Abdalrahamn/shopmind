@@ -1,86 +1,117 @@
-# Agent demo (Phase 4)
+# Agent demo: the four acceptance questions (Phase 6)
 
-Every step below was streamed live while the agent worked.
+Model: `deepseek/deepseek-v4.1-flash` (openrouter). Every step below was streamed live while the agent worked.
 
-## 1. A policy question → documents (RAG)
+## Demo question 1: a policy question → documents (RAG)
 
-**Khaled Zaki (customer):** how long do I have to return something I opened?
+**Khaled Zaki (customer):** What is the return policy?
 
-- 🔧 calls `search_store_docs` with `{"query": "return policy opened product"}`
-- 📥 `search_store_docs` returned: [POL-001] Return and Refund Policy Return and Refund Policy > Return windows  - **Unopened products:** you can return them within **30 days** of delivery for a full refund. - **Opened products in perfect condition:** you can retur…
+- 🔧 calls `search_store_docs` with `{"query": "return policy return window", "doc_type": "policy"}`
+- 📥 `search_store_docs` returned: [POL-001] Return and Refund Policy Return and Refund Policy > Exchanges  You can exchange a product for a different model or colour within the same return window. If the new product costs more, you pay the difference; if it costs …
 
-**ShopMind:** You can return an opened product within **14 days** of delivery, provided it is in perfect condition and includes all original accessories, manuals, and packaging [POL-001]. 
+**ShopMind:** Here's the short version of our Return and Refund Policy [POL-001]:
 
-Please note that certain opened items (like in-ear headphones/earbuds once the hygiene seal is broken, opened software/digital codes, or clearance items) cannot be returned unless they are defective [POL-001]. If the item is defective, you have 30 days from delivery to return or replace it [POL-001].
+**Return windows**
+- Unopened products: 30 days from delivery for a full refund.
+- Opened products in perfect condition: 14 days from delivery, with all original accessories, manuals and packaging.
+- Defective products: if they stop working within the first 30 days, we replace or fully refund them (opened or not). After 30 days, the warranty policy applies.
 
-*route: documents · sources: POL-001 · 6.5 s · answered by gemini-3.6-flash*
+**How to start a return**
+1. Open My Orders and select the order.
+2. Choose Request Return, pick the items and the reason.
+3. We review it within 2 business days.
+4. Once approved, a courier picks it up free in Cairo and Giza, or you can drop it at any ShopMind branch.
 
-## 2. A numbers question from staff → database (SQL)
+**Can't be returned**
+- Clearance items (final sale, unless defective)
+- Opened software, gift cards, digital licence codes
+- In-ear headphones/earbuds once the hygiene seal is broken (unless defective)
+- Products damaged by misuse, liquid, drops or unauthorised repair
 
-**Mona (store manager) (staff):** who are our top 5 customers by total spending?
+You can also exchange for a different model or colour within the same window — you pay or get refunded the price difference [POL-001].
 
-- 🔧 calls `query_database` with `{"sql": "SELECT c.full_name, SUM(o.total_egp) as total_spent\nFROM customers c\nJOIN orders o ON c.customer_id = o.customer_id\nWHERE o.status = 'delivered'\nGROUP BY c.customer_id\nORDER BY total_spent DESC\nLIMIT 5;"}`
-- 📥 `query_database` returned: full_name | total_spent Ali Mahfouz | 254993 Yasmin Sherif | 253794 Hassan Sherif | 218493 Mariam Naguib | 204592 Farida Ibrahim | 199266
+*route: documents · sources: POL-001 · 4.3 s · answered by deepseek/deepseek-v4.1-flash*
 
-**ShopMind:** أهلاً يا منى، إليك قائمة بأفضل 5 عملاء لدينا من حيث إجمالي المشتريات (للطلبات التي تم تسليمها):
+## Demo question 2: a numbers question from staff → database (SQL)
 
-1. علي محفوظ: 254,993 ج.م
-2. ياسمين شريف: 253,794 ج.م
-3. حسن شريف: 218,493 ج.م
-4. مريم نجيب: 204,592 ج.م
-5. فريدة إبراهيم: 199,266 ج.م
+**Mona (store manager) (staff):** Who are the top 3 customers by spend?
 
-*route: database · sources: none · 34.1 s · answered by gemini-3.1-flash-lite*
+- 🔧 calls `query_database` with `{"sql": "SELECT c.customer_id, c.full_name, c.city, c.loyalty_tier, SUM(o.total_egp) AS total_spend FROM customers c JOIN orders o ON o.customer_id = c.customer_id WHERE o.status = 'delivered' GROUP BY c.customer_id, c.full_name, c.city, c.loyalty_tier ORDER BY total_spend DESC LIMIT 3"}`
+- 📥 `query_database` returned: customer_id | full_name | city | loyalty_tier | total_spend 57 | Ali Mahfouz | Alexandria | gold | 254993 113 | Yasmin Sherif | Cairo | gold | 253794 81 | Hassan Sherif | Cairo | gold | 218493
+- 🔧 calls `query_database` with `{"sql": "SELECT c.customer_id, c.full_name, c.city, c.loyalty_tier, SUM(o.total_egp) AS total_spend FROM customers c JOIN orders o ON o.customer_id = c.customer_id WHERE o.status = 'delivered' GROUP BY c.customer_id, c.full_name, c.city, c.loyalty_tier ORDER BY total_spend DESC LIMIT 3"}`
+- 📥 `query_database` returned: customer_id | full_name | city | loyalty_tier | total_spend 57 | Ali Mahfouz | Alexandria | gold | 254993 113 | Yasmin Sherif | Cairo | gold | 253794 81 | Hassan Sherif | Cairo | gold | 218493
 
-## 3. The same question from a customer → refused (dynamic prompt + code check)
+**ShopMind:** Here are the top 3 customers by spend (delivered orders only):
 
-**Khaled Zaki (customer):** who are your top 5 customers by total spending?
+1. Ali Mahfouz (ID 57, Alexandria, gold) — EGP 254,993
+2. Yasmin Sherif (ID 113, Cairo, gold) — EGP 253,794
+3. Hassan Sherif (ID 81, Cairo, gold) — EGP 218,493
 
-- 🔧 calls `query_database` with `{"sql": "SELECT c.full_name, SUM(o.total_egp) as total_spent\nFROM customers c\nJOIN orders o ON c.customer_id = o.customer_id\nWHERE o.status = 'delivered'\nGROUP BY c.customer_id\nORDER BY total_spent DESC\nLIMIT 5;"}`
-- 📥 `query_database` returned: Refused: only staff can query the database. For a customer's own orders use get_my_orders.
+All three are gold-tier customers.
 
-**ShopMind:** I'm sorry, but I cannot share information about other customers' spending or personal details due to privacy policies. If you have any questions about your own orders or our products and policies, feel free to ask!
+*route: database · sources: none · 3.5 s · answered by deepseek/deepseek-v4.1-flash*
 
-*route: none · sources: none · 2.8 s · answered by gemini-3.6-flash*
+## Extra: the same question from a customer → refused (role check)
 
-## 4. Product advice with a budget and stock → documents + filter + MCP, then memory
+**Khaled Zaki (customer):** Who are the top 3 customers by spend?
+
+
+**ShopMind:** I can't share that — I can only see your own orders, not other customers' data. For store-wide reports like top spenders, please contact support on 19555.
+
+*route: none · sources: none · 1.5 s · answered by deepseek/deepseek-v4.1-flash*
+
+## Demo question 3: a product under a budget that is in stock → documents + metadata filter + MCP, then memory
 
 **Khaled Zaki (customer):** عايز موبايل تحت 15 الف ويكون متوفر دلوقتي
 
-- 🔧 calls `search_store_docs` with `{"product_category": "phones", "query": "موبايل تحت 15000", "max_price_egp": 15000}`
-- 📥 `search_store_docs` returned: [SM-PH-004] Xiaomi Redmi Note 15 Pro Xiaomi Redmi Note 15 Pro > Key specs  - 6.67-inch AMOLED, 120Hz - 256 GB storage, 8 GB RAM - 200 MP main camera - 5,100 mAh battery, 90W charging  [SM-PH-004] Xiaomi Redmi Note 15 Pro Xiaomi Re…
-- 🔧 calls `check_stock` with `{"product": "SM-PH-004"}`
-- 📥 `check_stock` returned: [{'type': 'text', 'text': '[{"sku": "SM-PH-004", "name": "Xiaomi Redmi Note 15 Pro", "price_egp": 13999, "stock_qty": 18, "in_stock": true}]', 'id': 'lc_9513f43d-2f2f-44dc-b57a-ee60c5eb09b6'}]
+- 🔧 calls `search_store_docs` with `{"query": "phone under 15000", "doc_type": "product", "product_category": "phones", "max_price_egp": 15000}`
+- 📥 `search_store_docs` returned: [SM-PH-004] Xiaomi Redmi Note 15 Pro Xiaomi Redmi Note 15 Pro  **Price:** 13,999 EGP **Warranty:** 12 months   A budget-friendly phone with a 200 MP camera and very fast 90W charging. One of the best phones under 15,000 EGP.  [SM-…
+- 🔧 calls `check_stock` with `{"product": "Redmi Note 15 Pro"}`
+- 📥 `check_stock` returned: [{'type': 'text', 'text': '[{"sku": "SM-PH-004", "name": "Xiaomi Redmi Note 15 Pro", "price_egp": 13999, "stock_qty": 18, "in_stock": true}]', 'id': 'lc_7d42adc4-8d89-47bc-a5b9-2ef723095dd4'}]
 
-**ShopMind:** أهلاً يا خالد، متاح حالياً موبايل Xiaomi Redmi Note 15 Pro بسعر 13,999 جنيه، وهو متوفر في المخزون [SM-PH-004]. الموبايل بيقدم مواصفات ممتازة زي كاميرا 200 ميجابكسل وشحن سريع 90 وات. تحب أساعدك في طلبه؟
+**ShopMind:** أيوه، عندنا واحد مناسب: **Xiaomi Redmi Note 15 Pro** بسعر 13,999 جنيه (تحت الـ15 ألف) وهو متوفر دلوقتي — فيه 18 قطعة في المخزن [SM-PH-004].
 
-*route: mixed · sources: SM-PH-004 · 4.9 s · answered by gemini-3.1-flash-lite*
+مواصفاته:
+- شاشة 6.67 بوصة AMOLED، 120Hz
+- 256 جيجا تخزين و8 جيجا رام
+- كاميرا 200 ميجابكسل
+- بطارية 5,100 مللي أمبير مع شحن سريع 90 واط
+- ضمان 12 شهر [SM-PH-004]
+
+تحب أحجزه لك؟
+
+*route: mixed · sources: SM-PH-004 · 4.5 s · answered by deepseek/deepseek-v4.1-flash*
 
 ### Follow-up in the same conversation → memory
 
 **Khaled Zaki (customer):** وضمانه قد ايه؟
 
-- 🔧 calls `search_store_docs` with `{"query": "ضمان Xiaomi Redmi Note 15 Pro", "doc_type": "product"}`
-- 📥 `search_store_docs` returned: [SM-PH-004] Xiaomi Redmi Note 15 Pro Xiaomi Redmi Note 15 Pro > Key specs  - 6.67-inch AMOLED, 120Hz - 256 GB storage, 8 GB RAM - 200 MP main camera - 5,100 mAh battery, 90W charging  [SM-PH-004] Xiaomi Redmi Note 15 Pro Xiaomi Re…
+- 🔧 calls `search_store_docs` with `{"query": "warranty policy phones months", "doc_type": "policy"}`
+- 📥 `search_store_docs` returned: [POL-003] Warranty Policy Warranty Policy > Warranty length  - Every product sold by ShopMind has an official warranty. The warranty length is written on each product page and on the invoice. - Phones, laptops, tablets and TVs: us…
 
-**ShopMind:** ضمان موبايل Xiaomi Redmi Note 15 Pro هو 12 شهر [SM-PH-004].
+**ShopMind:** ضمان الـXiaomi Redmi Note 15 Pro هو **12 شهر** ضمان المُصنّع، ومكتوب على صفحة المنتج وعلى الفاتورة [SM-PH-004].
 
-*route: documents · sources: SM-PH-004 · 2.6 s · answered by gemini-3.1-flash-lite*
+ولو حابب تزوّد الضمان، تقدر تضيف **ShopMind Care+** وقت الشراء (أو خلال 7 أيام من الاستلام) وبيزوّد الضمان 12 شهر كمان + إصلاح واحد للأضرار العارضة (شاشة أو سوائل)، وتكلفته 8% من سعر المنتج [POL-003].
 
-## 5. Cancel an order → human-in-the-loop
+ملاحظة صغيرة: الضمان بيغطي عيوب الصناعة، لكن مش بيغطي الكسر أو أضرار السوائل أو استهلاك البطارية بعد 12 شهر [POL-003].
 
-**Khaled Zaki (customer):** please cancel my order 1049
+*route: documents · sources: SM-PH-004, POL-003 · 2.2 s · answered by deepseek/deepseek-v4.1-flash*
 
+## Demo question 4: cancel an order → human-in-the-loop
+
+**Khaled Zaki (customer):** Cancel order #1049.
+
+- 🔧 calls `get_my_orders` with `{}`
+- 📥 `get_my_orders` returned: order_id | order_date | status | total_egp | items 1049 | 2026-08-11 | pending | 4497 | TP-Link Tapo C210 Security Camera x3 1268 | 2026-08-05 | confirmed | 22999 | Dell Inspiron 15 x1 1223 | 2026-03-18 | delivered | 57999 | Apple…
 - 🔧 calls `cancel_order` with `{"order_id": 1049}`
 - ⏸️ **paused for approval:** `cancel_order` with `{"order_id": 1049}`
 
 While paused, order 1049 is still `pending` in the database. A human now approves.
 
-- 🔧 calls `cancel_order` with `{"order_id": 1049}`
 - 📥 `cancel_order` returned: Order 1049 is now cancelled. Prepaid orders are refunded to the original payment method.
 
-**ShopMind:** تم إلغاء طلبك رقم 1049 بنجاح. إذا كنت قد دفعت مسبقاً، فسيتم استرداد المبلغ إلى وسيلة الدفع الأصلية.
+**ShopMind:** Done — order #1049 (3x TP-Link Tapo C210 Security Camera, 4,497 EGP) is now cancelled. If it was prepaid, the refund goes back to your original payment method. Anything else I can help with?
 
-*route: action · sources: none · 23.6 s · answered by gemini-3.1-flash-lite*
+*route: action · sources: none · 1.8 s · answered by deepseek/deepseek-v4.1-flash*
 
 After approval, order 1049 is `cancelled` in the database.

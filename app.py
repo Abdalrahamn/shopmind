@@ -356,7 +356,8 @@ with tab_gen_eval:
 
 # ---------------------------------------------------------------- Golden eval (Phase 5)
 with tab_golden:
-    names = {"DeepSeek run": "golden_eval_deepseek.md", "Gemini after fixes": "golden_eval_v2.md", "First run": "golden_eval.md",
+    names = {"Evaluation report": "evaluation_report.md", "Decisions log": "decisions.md", "Demo": "agent_demo.md",
+             "DeepSeek run": "golden_eval_deepseek.md", "Gemini after fixes": "golden_eval_v2.md", "First run": "golden_eval.md",
              "Failure cases": "failure_cases.md", "Security tests": "security_tests.md",
              "Injection in a document": "security_doc_injection.md", "Cost, latency and tracing": "production_notes.md"}
     for view, name in zip(st.tabs(list(names)), names.values()):
