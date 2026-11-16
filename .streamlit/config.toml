@@ -6,3 +6,14 @@ fileWatcherType = "poll"  # the default watcher overflowed on the .venv folder
 
 [browser]
 gatherUsageStats = false
+
+[theme]
+base = "light"
+primaryColor = "#0F766E"
+backgroundColor = "#F7F8FA"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#111827"
+font = "sans serif"
+
+[client]
+toolbarMode = "minimal"

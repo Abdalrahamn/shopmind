@@ -81,7 +81,7 @@ person. The offline part (bottom) is done once: documents are split into chunks,
   - [x] 6.3 [Evaluation report](reports/evaluation_report.md): comparison tables and the failure-case list
   - [x] 6.4 [Decisions log](reports/decisions.md): why this chunking, retrieval method and model
 
-Backlog (not started): improve the explorer UI.
+The explorer (`streamlit run app.py`) has a chat page, an overview, a search lab, a database page and evaluation charts.
 
 ## Getting started
 
