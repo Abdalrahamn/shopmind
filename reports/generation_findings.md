@@ -51,6 +51,27 @@ Numbers and every answer are in [generation_eval.md](generation_eval.md)
 - Answers always carry `[doc_id]` citations; citations not found in the retrieved sources
   are removed in code.
 
+## Re-run with DeepSeek (2026-11-17)
+
+The project now runs on DeepSeek through OpenRouter, so the same 10 questions were run again
+(`reports/generation_eval.md` now holds the DeepSeek answers).
+
+| | deepseek-v4.1-flash (answers) | deepseek-v4-flash (rewrites) | gemini-3.5-flash (before) | gemini-3.5-flash-lite (before) |
+|---|---|---|---|---|
+| Facts correct | 10/10 | 7/10 | 10/10 | 9/10 |
+| Refusal decision correct | 10/10 | 10/10 | 10/10 | 10/10 |
+| Made-up citations | 0 | 0 | 0 | 0 |
+| Replies in the customer's language | 10/10 | 2/10 | 10/10 | 5/10 |
+| Average latency | 3.4 s | 1.3 s | 4.2 s | 1.0 s |
+| Average output tokens | 598 | 153 | 739 | 95 |
+
+- The answer model keeps the same quality as Gemini flash, a little faster.
+- The cheaper v4-flash has the same weakness as Gemini lite, worse: it answered 8 English
+  questions in Arabic. Two of its "wrong facts" are the language problem again (Arabic digits,
+  Arabic wording). One is a real mistake: for the iPhone 17 Pro Max it said it does not know,
+  but also quoted the iPhone 17 price, which the prompt forbids.
+- Decision unchanged: the main model answers customers; the cheap model only rewrites queries.
+
 ## Limits of this evaluation
 
 - 10 questions is a small test. The checks are simple string matches (for example the

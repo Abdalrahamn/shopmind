@@ -6,92 +6,103 @@
 
 | Model | Answered | Facts correct | Refusals correct | Cites only relevant docs | Cites a relevant doc | Made-up citations | Reply in customer's language | Avg latency | Avg tokens in / out |
 |---|---|---|---|---|---|---|---|---|---|
-| gemini-3.5-flash | 10/10 | 10/10 | 10/10 | 7/7 | 7/7 | 0 | 10/10 | 4.2 s | 708 / 739 |
-| gemini-3.5-flash-lite | 10/10 | 9/10 | 10/10 | 7/7 | 7/7 | 0 | 5/10 | 1.0 s | 708 / 95 |
+| deepseek/deepseek-v4.1-flash | 10/10 | 10/10 | 10/10 | 7/7 | 7/7 | 0 | 10/10 | 3.4 s | 733 / 598 |
+| deepseek/deepseek-v4-flash | 10/10 | 7/10 | 10/10 | 7/7 | 7/7 | 0 | 2/10 | 1.3 s | 749 / 153 |
 
 ## Problems found
 
-- **gemini-3.5-flash-lite**, g03 (policy): wrong language. Answer: "أهلاً بك! يمكنك التقسيط بدون فوائد لمدة 6 أشهر باستخدام بطاقات من البنوك الشريكة (البنك التجاري الدولي CIB، بنك مصر، البنك الأهلي المصري، وقناة السويس QNB)، وذلك للطلبات بقيمة 3000 جنيه مصري أو أكثر [POL-005]."
-- **gemini-3.5-flash-lite**, g04 (multi-doc): wrong or missing fact, wrong language. Answer: "أهلاً بك! بالنسبة لجوجل Pixel 10a، فهو منتج تصفية (Clearance) وبالتالي يعتبر بيعاً نهائياً ولا يمكن إرجاعه إلا إذا كان عائباً [SM-PH-005, POL-001]."
-- **gemini-3.5-flash-lite**, g08 (unanswerable): wrong language. Answer: "عذراً، لا أملك معلومات عن سعر iPhone 17 Pro Max. يمكنك التواصل معنا على رقم الدعم 19555 لمعرفة المزيد."
-- **gemini-3.5-flash-lite**, g09 (unanswerable): wrong language. Answer: "عذراً، لا أملك معلومات حول تكلفة إصلاح الشاشة خارج الضمان. يرجى التواصل مع الدعم على 19555 للمساعدة."
-- **gemini-3.5-flash-lite**, g10 (unanswerable): wrong language. Answer: "عذراً، لا أملك هذه المعلومات. يمكنك التواصل مع خدمة العملاء على 19555."
+- **deepseek/deepseek-v4-flash**, g01 (policy): wrong language. Answer: "إذا كان المنتج مفتوحًا وفي حالة ممتازة، عندك 14 يوم من تاريخ الاستلام لترجعه، بشرط يكون معاه كل الملحقات والكتالوج والتغليف الأصلي [POL-001]. لو المنتج فيه عيب ووقف شغل خلال أول 30 يوم، تقدر ترجعه حتى لو مفتوح [POL-001]."
+- **deepseek/deepseek-v4-flash**, g02 (policy): wrong language. Answer: "التوصيل للإسكندرية: الشحن العادي (Standard) بـ 75 جنيه [POL-002]، والتوصيل السريع (Express) بـ 120 جنيه [POL-002]. مدة التوصيل العادي من 2 لـ 4 أيام عمل، والتوصيل السريع بيوصل اليوم التالي [POL-002]. لو الطلب كبير (زي تل"
+- **deepseek/deepseek-v4-flash**, g03 (policy): wrong language. Answer: "تقدر تدفع على 6 شهور بدون فوائد لو استخدمت بطاقة من البنوك الشريكة: CIB، بنك مصر، البنك الأهلي المصري، أو QNB. العرض ده متاح للطلبات اللي قيمتها 3000 جنيه أو أكثر [POL-005]. هتختار خطة التقسيط من صفحة الدفع، والبنك بيحول"
+- **deepseek/deepseek-v4-flash**, g04 (multi-doc): wrong or missing fact, wrong language. Answer: "للأسف، Google Pixel 10a من منتجات التصفية (Clearance) وده معناه إنه بيع نهائي ومش ممكن ترجعه إلا لو كان فيه عيب صناعة [POL-001]. لو ظهر عيب خلال أول 30 يوم من الاستلام، تقدر تطلبه استبدال أو استرداد كامل [POL-001]. لو مح"
+- **deepseek/deepseek-v4-flash**, g06 (arabic): wrong or missing fact. Answer: "مصاريف الشحن حسب منطقتك وقيمة الطلب: لو طلبك ٢٠٠٠ جنيه أو أكتر والتوصيل للقاهرة أو الجيزة، الشحن مجاناً [POL-002]. لو أقل من كده، الشحن ٥٠ جنيه للقاهرة والجيزة [POL-002]. لباقي المحافظات، الشحن ٧٥ جنيه، وبيبقى مجاناً لو "
+- **deepseek/deepseek-v4-flash**, g07 (archived trap): wrong language. Answer: "المبالغ المستردة للبطاقات تستغرق من **5 إلى 10 أيام عمل** بعد استلامنا وفحص المنتج [POL-001]."
+- **deepseek/deepseek-v4-flash**, g08 (unanswerable): wrong or missing fact, wrong language. Answer: "مع الأسف، المعلومات المتوفرة عندي مش بتشمل سعر iPhone 17 Pro Max. اللي موجود هو سعر iPhone 17 العادي بـ 57,999 جنيه [SM-PH-003]. لو عايز تفاصيل أكتر، يرجى التواصل مع الدعم الفني على 19555."
+- **deepseek/deepseek-v4-flash**, g09 (unanswerable): wrong language. Answer: "معنديش معلومات عن تكلفة إصلاح الشاشة بره الضمان. لو عايز تفاصيل أكتر، اتصل بخدمة العملاء على 19555."
+- **deepseek/deepseek-v4-flash**, g10 (unanswerable): wrong language. Answer: "مع الأسف، المعلومات دي مش موجودة عندي. لو عايز تعرف مين الرئيس التنفيذي لـ ShopMind، ممكن تتصل بخدمة العملاء على 19555."
 
 ## Answers
 
 **g01 (policy): how many days do I have to return a product I already opened?**
 
-- `gemini-3.5-flash` (answered; cites POL-001, FAQ-005): If you opened the product and it is in perfect condition (with all original accessories, manuals, and packaging), you have 14 days from delivery to return it [POL-001] [FAQ-005]. However, if the opened product is defective, you can return it within 30 days of delivery for a full refund or replacement [POL-001] [FAQ-005].
-- `gemini-3.5-flash-lite` (answered; cites POL-001): You have 14 days from delivery to return an opened product in perfect condition with all original accessories, manuals, and packaging [POL-001].
+- `deepseek/deepseek-v4.1-flash` (answered; cites POL-001): If you opened the product and it is in perfect condition, you have 14 days from delivery to return it, and it must include all original accessories, manuals, and packaging [POL-001]. If the product is defective, it can be replaced or refunded in full within the first 30 days, whether it was opened or not [POL-001].
+- `deepseek/deepseek-v4-flash` (answered; cites POL-001): إذا كان المنتج مفتوحًا وفي حالة ممتازة، عندك 14 يوم من تاريخ الاستلام لترجعه، بشرط يكون معاه كل الملحقات والكتالوج والتغليف الأصلي [POL-001]. لو المنتج فيه عيب ووقف شغل خلال أول 30 يوم، تقدر ترجعه حتى لو مفتوح [POL-001].
 
 **g02 (policy): how much is delivery to Alexandria?**
 
-- `gemini-3.5-flash` (answered; cites POL-002): Standard shipping to Alexandria is 75 EGP, and it is free for orders of 5,000 EGP or more [POL-002]. Express delivery costs 120 EGP [POL-002]. For large items (such as TVs over 55 inches or gaming chairs), there is a fixed fee of 150 EGP outside Cairo and Giza [POL-002].
-- `gemini-3.5-flash-lite` (answered; cites POL-002): Standard shipping to Alexandria (and Delta and Canal cities) is 75 EGP, and it is free on orders of 5,000 EGP or more [POL-002]. Express delivery is next business day and costs 120 EGP (never free) [POL-002].
+- `deepseek/deepseek-v4.1-flash` (answered; cites POL-002): Standard shipping to Alexandria is 75 EGP, and it's free on orders of 5,000 EGP or more [POL-002]. If you need it faster, express delivery is 120 EGP and arrives the next business day [POL-002]. Standard delivery to Alexandria takes 2 to 4 business days [POL-002].
+- `deepseek/deepseek-v4-flash` (answered; cites POL-002): التوصيل للإسكندرية: الشحن العادي (Standard) بـ 75 جنيه [POL-002]، والتوصيل السريع (Express) بـ 120 جنيه [POL-002]. مدة التوصيل العادي من 2 لـ 4 أيام عمل، والتوصيل السريع بيوصل اليوم التالي [POL-002]. لو الطلب كبير (زي تلفزيون أكبر من 55 بوصة أو كرسي جيمنج) برا القاهرة والجيزة، فيه رسوم ثابتة 150 جنيه [POL-002].
 
 **g03 (policy): pay over 6 months with no interest**
 
-- `gemini-3.5-flash` (answered; cites POL-005): You can get 0% interest for 6 months using cards from partner banks, which include CIB, Banque Misr, National Bank of Egypt, and QNB [POL-005]. Instalment plans are available for orders of 3,000 EGP or more [POL-005]. You can select the instalment plan on the payment page, and your bank will convert the purchase within one billing cycle [POL-005].
-- `gemini-3.5-flash-lite` (answered; cites POL-005): أهلاً بك! يمكنك التقسيط بدون فوائد لمدة 6 أشهر باستخدام بطاقات من البنوك الشريكة (البنك التجاري الدولي CIB، بنك مصر، البنك الأهلي المصري، وقناة السويس QNB)، وذلك للطلبات بقيمة 3000 جنيه مصري أو أكثر [POL-005].
+- `deepseek/deepseek-v4.1-flash` (answered; cites POL-005): Yes — 0% interest for 6 months is available with cards from partner banks: CIB, Banque Misr, National Bank of Egypt, and QNB. It applies to orders of 3,000 EGP or more. You choose the instalment plan on the payment page, and your bank converts the purchase within one billing cycle. [POL-005]
+- `deepseek/deepseek-v4-flash` (answered; cites POL-005): تقدر تدفع على 6 شهور بدون فوائد لو استخدمت بطاقة من البنوك الشريكة: CIB، بنك مصر، البنك الأهلي المصري، أو QNB. العرض ده متاح للطلبات اللي قيمتها 3000 جنيه أو أكثر [POL-005]. هتختار خطة التقسيط من صفحة الدفع، والبنك بيحول المبلغ خلال دورة الفوترة الأولى [POL-005].
 
 **g04 (multi-doc): can I return the Pixel 10a?**
 
-- `gemini-3.5-flash` (answered; cites SM-PH-005, POL-001): The Google Pixel 10a is a clearance item (final sale) [SM-PH-005], so it cannot be returned unless it is defective [POL-001]. If it is defective within the first 30 days, it can be replaced or fully refunded [POL-001].
-- `gemini-3.5-flash-lite` (answered; cites SM-PH-005, POL-001): أهلاً بك! بالنسبة لجوجل Pixel 10a، فهو منتج تصفية (Clearance) وبالتالي يعتبر بيعاً نهائياً ولا يمكن إرجاعه إلا إذا كان عائباً [SM-PH-005, POL-001].
+- `deepseek/deepseek-v4.1-flash` (answered; cites SM-PH-005, POL-001): The Pixel 10a is a clearance item marked final sale [SM-PH-005]. Clearance items cannot be returned unless they are defective [POL-001]. So if it is not defective, you cannot return it. If it is defective and stops working within the first 30 days, it can be replaced or refunded in full [POL-001].
+- `deepseek/deepseek-v4-flash` (answered; cites POL-001, SM-PH-005): للأسف، Google Pixel 10a من منتجات التصفية (Clearance) وده معناه إنه بيع نهائي ومش ممكن ترجعه إلا لو كان فيه عيب صناعة [POL-001]. لو ظهر عيب خلال أول 30 يوم من الاستلام، تقدر تطلبه استبدال أو استرداد كامل [POL-001]. لو محتاج مساعدة أكتر، اتصل بخدمة العملاء على 19555.
 
 **g05 (arabic): ازاي ارجع منتج فتحته؟**
 
-- `gemini-3.5-flash` (answered; cites POL-001): تقدر ترجع المنتج المفتوح خلال 14 يوم من التوصيل بشرط يكون بحالة ممتازة ومعاه كل الملحقات والكتالوجات والتغليف الأصلي [POL-001]. أما لو المنتج فيه عيب، تقدر ترجعه خلال 30 يوم سواء مفتوح أو لا [POL-001]. (تنبيه: البرامج المفتوحة، وسماعات الأذن إذا تم كسر ختم Hygiene Seal، ومنتجات التصفية Clearance لا يمكن إرجاعها إلا إذا كانت معيبة [POL-001]). لطلب الإرجاع: 1. افتح طلباتي (My Orders) من حسابك واختار الطلب [POL-001]. 2. اختار طلب إرجاع (Request Return) وحدد المنتجات والسبب [POL-001]. 3. بيتم مراجعة الطلب خلال يومين عمل [POL-001]. 4. بعد الموافقة، مندوب بيستلم المنتج مجانًا (في القاهرة والجيزة) أو تقدر تسلمه في أي فرع من فروع ShopMind [POL-001].
-- `gemini-3.5-flash-lite` (answered; cites POL-001): عشان ترجع منتج فتحته، لازم يكون في حالة ممتازة ومعاه كل الإكسسوارات الأصلية والكتيبات والعبوة خلال 14 يوم من تاريخ الاستلام [POL-001]. تقدر تبدأ المرتجع من قسم "طلباتي" في حسابك، تختار الطلب وتدوس "طلب إرجاع" وتحدد المنتجات والسبب [POL-001].
+- `deepseek/deepseek-v4.1-flash` (answered; cites POL-001): لو المنتج مفتوح وفي حالة ممتازة، تقدر ترجعه خلال 14 يوم من التوصيل، ولازم يكون معاه كل الملحقات والكتيبات والتغليف الأصلي [POL-001].
+
+طريقة الإرجاع:
+1. افتح My Orders في حسابك واختر الطلب [POL-001].
+2. اختر Request Return وحدد المنتجات والسبب [POL-001].
+3. فريقنا يراجع الطلب خلال 2 أيام عمل [POL-001].
+4. بعد الموافقة، المندوب يستلم المنتج من عنوانك مجانًا في القاهرة والجيزة، أو تقدر تسلمه في أي فرع ShopMind [POL-001].
+
+ملاحظة: لو المنتج فيه عيب، خلال أول 30 يوم نستبدله أو نرجّع قيمته كاملة حتى لو مفتوح [POL-001]. وفي منتجات مفتوحة ماينفعش ترجع: السوفت وير المفتوح، بطاقات الهدايا، الأكواد الرقمية، سماعات الأذن/الإيربودز بعد كسر الختم الصحي إلا لو فيها عيب، ومنتجات Clearance نهائية إلا لو فيها عيب [POL-001].
+- `deepseek/deepseek-v4-flash` (answered; cites POL-001): لو المنتج اللي فتحته في حالة كويسة و معاه كل محتوياته، تقدر ترجعه خلال 14 يوم من الاستلام [POL-001]. عشان تبدأ الطلب، افتح My Orders في حسابك، اختار الطلب، واضغط Request Return، واختار المنتج وسبب الإرجاع. الفريق هيراجع طلبك خلال 2 يوم عمل، وبعدها هتستلم المنتج منك مجانًا لو في القاهرة أو الجيزة، أو تقدر تسيبه في أي فرع من ShopMind [POL-001].
 
 **g06 (arabic): مصاريف الشحن كام؟**
 
-- `gemini-3.5-flash` (answered; cites POL-002): مصاريف الشحن بتختلف حسب المكان وحجم الطلب:
-- الشحن القياسي للقاهرة والجيزة: 50 جنيه، ومجاناً للطلبات بقيمة 2,000 جنيه أو أكثر [POL-002].
-- الشحن القياسي لباقي المحافظات: 75 جنيه، ومجاناً للطلبات بقيمة 5,000 جنيه أو أكثر [POL-002].
-- التوصيل السريع (Express): 120 جنيه وغير مجاني تماماً [POL-002].
-- المنتجات الكبيرة (تلفزيونات أكبر من 55 بوصة أو كراسي الألعاب): رسوم ثابتة 150 جنيه خارج القاهرة والجيزة [POL-002].
-- `gemini-3.5-flash-lite` (answered; cites POL-002): مصاريف الشحن كالتالي:
-- الشحنات القياسية للقاهرة والجيزة مجانية للطلبات من 2000 جنيه أو أكثر، وتكون 50 جنيه للطلبات الأصغر [POL-002].
-- الشحن القياسي لباقي المحافظات هو 75 جنيه، ومجاني للطلبات من 5000 جنيه أو أكثر [POL-002].
-- التوصيل السريع هو 120 جنيه ومش بيبقى مجاني أبداً [POL-002].
-- الأجهزة الكبيرة (زي التليفزيونات الأكبر من 55 بوصة وكراسي الألعاب) ليها رسوم ثابتة 150 جنيه بره القاهرة والجيزة [POL-002].
+- `deepseek/deepseek-v4.1-flash` (answered; cites POL-002): أهلاً بيك! دي مصاريف الشحن عندنا:
+
+• القاهرة والجيزة: الشحن العادي مجاني للطلبات 2,000 جنيه أو أكثر، ولو أقل من كده بـ 50 جنيه [POL-002].
+• باقي المحافظات: الشحن العادي بـ 75 جنيه، ومجاني للطلبات 5,000 جنيه أو أكثر [POL-002].
+• الشحن السريع بـ 120 جنيه، ومش مجاني أبداً [POL-002].
+• الأجهزة الكبيرة زي التلفزيونات فوق 55 بوصة والكراسي الجيمنج: رسوم ثابتة 150 جنيه بره القاهرة والجيزة [POL-002].
+
+لو حابب تعرف تفاصيل أكتر، كلمنا على 19555.
+- `deepseek/deepseek-v4-flash` (answered; cites POL-002): مصاريف الشحن حسب منطقتك وقيمة الطلب: لو طلبك ٢٠٠٠ جنيه أو أكتر والتوصيل للقاهرة أو الجيزة، الشحن مجاناً [POL-002]. لو أقل من كده، الشحن ٥٠ جنيه للقاهرة والجيزة [POL-002]. لباقي المحافظات، الشحن ٧٥ جنيه، وبيبقى مجاناً لو الطلب ٥٠٠٠ جنيه أو أكتر [POL-002]. التوصيل السريع بـ ١٢٠ جنيه ومش بيكون مجاني أبداً [POL-002]. الأغراض الكبيرة زي تلفزيونات فوق ٥٥ بوصة أو كراسي جيمنج، عليهم رسوم ثابتة ١٥٠ جنيه بره القاهرة والجيزة [POL-002].
 
 **g07 (archived trap): how long do card refunds take?**
 *The archived 2024 policy says 14 business days; the current one says 5 to 10.*
 
-- `gemini-3.5-flash` (answered; cites POL-001, FAQ-006): Card refunds take 5 to 10 business days after we receive and inspect the returned item [POL-001] [FAQ-006].
-- `gemini-3.5-flash-lite` (answered; cites POL-001): Card refunds take 5 to 10 business days after we receive and inspect the item [POL-001].
+- `deepseek/deepseek-v4.1-flash` (answered; cites POL-001, FAQ-006): Card refunds take **5 to 10 business days** after we receive and inspect the returned item [POL-001][FAQ-006].
+- `deepseek/deepseek-v4-flash` (answered; cites POL-001): المبالغ المستردة للبطاقات تستغرق من **5 إلى 10 أيام عمل** بعد استلامنا وفحص المنتج [POL-001].
 
 **g08 (unanswerable): what is the price of the iPhone 17 Pro Max?**
 *Only the iPhone 17 is in the catalogue. Its price must not be given as the Pro Max price.*
 
-- `gemini-3.5-flash` (said it does not know; cites nothing): I do not have information about the price of the iPhone 17 Pro Max. Please contact our support team on 19555 for assistance.
-- `gemini-3.5-flash-lite` (said it does not know; cites nothing): عذراً، لا أملك معلومات عن سعر iPhone 17 Pro Max. يمكنك التواصل معنا على رقم الدعم 19555 لمعرفة المزيد.
+- `deepseek/deepseek-v4.1-flash` (said it does not know; cites nothing): I don’t have information about the iPhone 17 Pro Max price. Please contact support on 19555 for help.
+- `deepseek/deepseek-v4-flash` (said it does not know; cites SM-PH-003): مع الأسف، المعلومات المتوفرة عندي مش بتشمل سعر iPhone 17 Pro Max. اللي موجود هو سعر iPhone 17 العادي بـ 57,999 جنيه [SM-PH-003]. لو عايز تفاصيل أكتر، يرجى التواصل مع الدعم الفني على 19555.
 
 **g09 (unanswerable): how much does a screen repair cost outside the warranty?**
 
-- `gemini-3.5-flash` (said it does not know; cites nothing): I am sorry, but I don't have information about the cost of screen repairs outside the warranty. Please contact customer support on 19555 for assistance.
-- `gemini-3.5-flash-lite` (said it does not know; cites nothing): عذراً، لا أملك معلومات حول تكلفة إصلاح الشاشة خارج الضمان. يرجى التواصل مع الدعم على 19555 للمساعدة.
+- `deepseek/deepseek-v4.1-flash` (said it does not know; cites POL-003): I don’t have the screen repair cost outside warranty in my sources. The standard warranty doesn’t cover cracked screens [POL-003]. Please contact support on 19555 for a repair quote.
+- `deepseek/deepseek-v4-flash` (said it does not know; cites nothing): معنديش معلومات عن تكلفة إصلاح الشاشة بره الضمان. لو عايز تفاصيل أكتر، اتصل بخدمة العملاء على 19555.
 
 **g10 (unanswerable): who is the CEO of ShopMind?**
 
-- `gemini-3.5-flash` (said it does not know; cites nothing): I'm sorry, but I do not have information regarding who the CEO of ShopMind is. Please contact support on 19555 for assistance.
-- `gemini-3.5-flash-lite` (said it does not know; cites nothing): عذراً، لا أملك هذه المعلومات. يمكنك التواصل مع خدمة العملاء على 19555.
+- `deepseek/deepseek-v4.1-flash` (said it does not know; cites nothing): I don’t have this information. Please contact support on 19555.
+- `deepseek/deepseek-v4-flash` (said it does not know; cites nothing): مع الأسف، المعلومات دي مش موجودة عندي. لو عايز تعرف مين الرئيس التنفيذي لـ ShopMind، ممكن تتصل بخدمة العملاء على 19555.
 
 ## Sampling: temperature 0 vs high temperature
 
-Question: *can I return the Pixel 10a?* asked 3 times per temperature with `gemini-3.5-flash`.
+Question: *can I return the Pixel 10a?* asked 3 times per temperature with `deepseek/deepseek-v4.1-flash`.
 
-**Temperature 0.0:** 3 different wordings in 3 runs, 21–49 words, key fact correct in 3/3.
+**Temperature 0.0:** 3 different wordings in 3 runs, 48–52 words, key fact correct in 3/3.
 
-1. The Google Pixel 10a is a clearance item (final sale) [SM-PH-005], so it cannot be returned unless it is defective [POL-001]. If it is defective within the first 30 days, it can be replaced or fully refunded [POL-001].
-2. The Google Pixel 10a is a clearance item (final sale) [SM-PH-005], so it cannot be returned unless it is defective [POL-001].
-3. The Google Pixel 10a is a clearance item and marked as final sale [SM-PH-005]. Items sold in the Clearance section cannot be returned unless they are defective [POL-001]. If the product is defective within the first 30 days of delivery, it can be replaced or refunded in full [POL-001].
+1. The Pixel 10a is a clearance item marked final sale [SM-PH-005]. Clearance items cannot be returned unless they are defective [POL-001]. So if it is not defective, you cannot return it. If it is defective and stops working within the first 30 days, it can be replaced or refunded in full [POL-001].
+2. Unfortunately, the Google Pixel 10a is a clearance item and final sale, so it cannot be returned unless it is defective [SM-PH-005] [POL-001]. If it is defective within the first 30 days, it can be replaced or fully refunded [POL-001]. After 30 days, defects are handled under the warranty policy [POL-001].
+3. The Pixel 10a is a clearance item and final sale, so it can’t be returned for change of mind [SM-PH-005][POL-001]. If it’s defective, you can get a replacement or full refund within 30 days of delivery [POL-001]. After 30 days, defects are handled under the 12-month warranty [POL-001][SM-PH-005].
 
-**Temperature 1.5:** 3 different wordings in 3 runs, 24–42 words, key fact correct in 3/3.
+**Temperature 1.5:** 3 different wordings in 3 runs, 46–58 words, key fact correct in 3/3.
 
-1. The Google Pixel 10a is a clearance item and marked as final sale [SM-PH-005]. Items sold in the clearance section cannot be returned unless they are defective [POL-001].
-2. The Google Pixel 10a is a clearance item (final sale) [SM-PH-005], which means it cannot be returned unless it is defective [POL-001]. If it stops working within the first 30 days of delivery, it can be replaced or refunded in full [POL-001].
-3. The Google Pixel 10a is a clearance item and marked as final sale [SM-PH-005]. Therefore, it cannot be returned unless it is defective [POL-001].
+1. The Pixel 10a is a clearance item and is final sale [SM-PH-005]. Clearance items cannot be returned unless they are defective [POL-001]. So you can’t return it just because you changed your mind. If it is defective within the first 30 days, it can be replaced or refunded in full [POL-001].
+2. Generally no. The Google Pixel 10a is marked as a clearance item with final sale, so it cannot be returned unless it is defective. If it is defective within the first 30 days, it can be replaced or refunded in full, whether opened or not. [SM-PH-005][POL-001]
+3. Unfortunately, the Pixel 10a can't be returned. It's listed as a Clearance item and final sale, and items sold in the Clearance section are final sale and cannot be returned — unless the product is defective. [SM-PH-005][POL-001] So if it arrives defective (stops working within the first 30 days), we'd replace it or refund you in full. [POL-001]
 
